@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="generator" content="nico 0.5.2">
+    <meta name="theme" content="one 0.2">
+    <title>基本的命令行编辑技巧</title>
+    <link rel="stylesheet" href="./static/one.css" />
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <a class="home" href="./">谭帅的博客</a>
+        </div>
+        <div class="menu" role="navigation">
+          <a href="../../../../feed.xml">订阅</a>
+        </div>
+      </div>
+    </div>
+    <div class="document yue">
+<div class="hentry" itemscope itemtype="http://schema.org/Article">
+  <h1 class="entry-title" itemprop="name">基本的命令行编辑技巧</h1>
+  <div class="entry-content" itemprop="articleBody"><p>GNU Bash shell 提供了 <a href="https://www.gnu.org/software/bash/manual/html_node/Command-Line-Editing.html">Command line editing</a> 功能，它是由 <a href="http://tiswww.case.edu/php/chet/readline/rltop.html">Readline library</a> 实现的。Python 交互式命令行和 node.js REPL等程序都实现了类似的命令行编辑功能。Command line editing 支持 Emacs-style 和 Vi-style 的命令风格，默认的是 Emacs-style。</p>
+<h2 id="命令行编辑">命令行编辑</h2><p>基本上，Unix/Linux 系统默认就支持 Command line editing，所以打开终端，或者在终端运行 Python interactive 或者 Node REPL，都可以马上使用常规的 Emacs 的控制字符集 <code>Control-*</code> 了。</p>
+<ul>
+<li><code>C-a</code> （Control-a）移动光标到行首</li>
+<li><code>C-e</code> 移动光标到行尾</li>
+<li><code>C-b</code> 将光标往左移动一个位置</li>
+<li><code>C-f</code> 将光标往右移动一个位置</li>
+<li><code>Backspace</code> 你懂得</li>
+<li><code>C-d</code> 删除光标右边的一个字符</li>
+<li><code>C-k</code> 删除光标右边所有的字符</li>
+<li><code>C-y</code> 拉回最后一次删除的字符</li>
+<li><code>C-_</code> 撤销最后一次操作</li>
+</ul>
+<h2 id="历史替换">历史替换</h2><p>历史替换（History Subsititution）的工作原理如下。所有已运行的非空命令行，都会保存到历史缓冲区，当你在一个新的提示符后输入时，实际上是在缓冲区底部添加新的一行。
+<code>C-p</code> 可以往上移动一行，<code>C-n</code> 往下移动一行，<code>C-R</code> 可以反向搜索， <code>C-s</code> 向前搜索。</p>
+<h2 id="键值绑定">键值绑定</h2><p>可以在 <code>~/.inputrc</code> 文件中增加一些自定义的命令和功能。常见的形式是： <code>key-name: function-name</code> 或 <code>&quot;string&quot;: function-name</code>，还可以通过 <code>set option-name vale</code> 设置选项。
+一个简单的例子：</p>
+<pre># I prefer vi-style editing:
+set editing-mode vi
+
+# Edit using a single line:
+set horizontal-scroll-mode On
+
+# Rebind some keys:
+Meta-h: backward-kill-word
+&quot;\C-u&quot;: universal-argument
+&quot;\C-x\C-r&quot;: re-read-init-file
+</pre></div>
+
+  <div class="entry-meta">
+    <time class="updated" datetime="2015-01-26T14:46:54.000Z" itemprop="dateModified">Monday, Jan 26th, 2015</time>
+    in <span class="entry-tags">
+      
+      <a href="tag/shell/">shell</a>
+      
+    </span>
+  </div><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"tanshuai"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+</div>
+</div>
+    <div class="footer">
+      <p class="copyright">powered by <a href="http://lab.lepture.com/nico/">nico</a> 0.5.2</p>
+    </div>
+    <script src="./static/one.js"></script>
+  </body>
+</html>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>谭帅的博客</title>
+    <link href="http://blog.tanshuai.me/feed.xml" rel="self" />
+    <link href="http://blog.tanshuai.me/" />
+    <id>http://blog.tanshuai.me/feed.xml</id>
+    <entry>
+        <title type="html"><![CDATA[基本的命令行编辑技巧]]></title>
+        <link href="http://blog.tanshuai.me/the-basic-command-line-editing.html"/>
+        <published>2015-01-26T14:46:54.000Z</published>
+        <updated>2015-01-26T14:46:54.000Z</updated>
+        <id>http://blog.tanshuai.me/the-basic-command-line-editing.html</id>
+        <content type="html" xml:base="http://blog.tanshuai.me/" xml:lang="en">
+            <![CDATA[ <p>GNU Bash shell 提供了 <a href="https://www.gnu.org/software/bash/manual/html_node/Command-Line-Editing.html">Command line editing</a> 功能，它是由 <a href="http://tiswww.case.edu/php/chet/readline/rltop.html">Readline library</a> 实现的。Python 交互式命令行和 node.js REPL等程序都实现了类似的命令行编辑功能。Command line editing 支持 Emacs-style 和 Vi-style 的命令风格，默认的是 Emacs-style。</p>
+<h2 id="命令行编辑">命令行编辑</h2><p>基本上，Unix/Linux 系统默认就支持 Command line editing，所以打开终端，或者在终端运行 Python interactive 或者 Node REPL，都可以马上使用常规的 Emacs 的控制字符集 <code>Control-*</code> 了。</p>
+<ul>
+<li><code>C-a</code> （Control-a）移动光标到行首</li>
+<li><code>C-e</code> 移动光标到行尾</li>
+<li><code>C-b</code> 将光标往左移动一个位置</li>
+<li><code>C-f</code> 将光标往右移动一个位置</li>
+<li><code>Backspace</code> 你懂得</li>
+<li><code>C-d</code> 删除光标右边的一个字符</li>
+<li><code>C-k</code> 删除光标右边所有的字符</li>
+<li><code>C-y</code> 拉回最后一次删除的字符</li>
+<li><code>C-_</code> 撤销最后一次操作</li>
+</ul>
+<h2 id="历史替换">历史替换</h2><p>历史替换（History Subsititution）的工作原理如下。所有已运行的非空命令行，都会保存到历史缓冲区，当你在一个新的提示符后输入时，实际上是在缓冲区底部添加新的一行。
+<code>C-p</code> 可以往上移动一行，<code>C-n</code> 往下移动一行，<code>C-R</code> 可以反向搜索， <code>C-s</code> 向前搜索。</p>
+<h2 id="键值绑定">键值绑定</h2><p>可以在 <code>~/.inputrc</code> 文件中增加一些自定义的命令和功能。常见的形式是： <code>key-name: function-name</code> 或 <code>&quot;string&quot;: function-name</code>，还可以通过 <code>set option-name vale</code> 设置选项。
+一个简单的例子：</p>
+<pre># I prefer vi-style editing:
+set editing-mode vi
+
+# Edit using a single line:
+set horizontal-scroll-mode On
+
+# Rebind some keys:
+Meta-h: backward-kill-word
+&quot;\C-u&quot;: universal-argument
+&quot;\C-x\C-r&quot;: re-read-init-file
+</pre>]]>
+        </content>
+    </entry><entry>
+        <title type="html"><![CDATA[一个 JavaScript 控制台错误]]></title>
+        <link href="http://blog.tanshuai.me/a-javascript-console-error.html"/>
+        <published>2014-10-16T08:51:17.000Z</published>
+        <updated>2014-10-16T08:51:17.000Z</updated>
+        <id>http://blog.tanshuai.me/a-javascript-console-error.html</id>
+        <content type="html" xml:base="http://blog.tanshuai.me/" xml:lang="en">
+            <![CDATA[ <p>Web 浏览器中的开发者工具都会提供一个控制台（或者也叫命令行）。在调试 JS 时，在控制台中打印变量或者测试代码片段都很方便。某日，在调试 JS 代码中，在控制台打印一个变量却出现<code>ReferenceError: varialbe is not defined</code>错误，令我感到迷惑不解。场景大致如下：</p>
+<div class="highlight"><pre><code class="javascript"><span class="keyword">var</span> getSth = <span class="function"><span class="keyword">function</span> <span class="params">(key)</span> {</span>
+    $.ajax({
+        url: <span class="string">'/echo/json'</span>,
+        type: <span class="string">'GET'</span>,
+        data: {key: key},
+        dataType: <span class="string">'json'</span>
+    }).done(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
+        console.log(key)
+    })
+}</code></pre></div><p>AJAX请求成功执行匿名回调函数时，<code>console.log</code>语句会正常打印<code>key</code>值。但将<code>console.log(key)</code>改为 <code>console.log(data)</code>，通过开发工具在此处设置一个断点，代码执行在断点处时在控制台中打印<code>key</code>，则会报错<code>ReferenceError: key is not defined</code>。</p>
+<p>一开始想当然的认为<code>key</code>变量是通过查找作用域链获得，反复调试后发现，如果在匿名回调函数的代码中引用<code>key</code>变量的话，则会在当前作用域创建一个闭包，而 JavaScript 是基于<a href="http://zh.wikipedia.org/wiki/%E4%BD%9C%E7%94%A8%E5%9F%9F">词法作用域</a>，闭包的创建是在词法分析阶段，所以在代码执行时通过控制台动态的引用<code>key</code>值会得到一个<code>ReferenceError</code>。</p>
+]]>
+        </content>
+    </entry><entry>
+        <title type="html"><![CDATA[Comment lines in vim]]></title>
+        <link href="http://blog.tanshuai.me/comment-lines-in-vim.html"/>
+        <published>2014-06-17T13:47:14.000Z</published>
+        <updated>2014-06-17T13:47:14.000Z</updated>
+        <id>http://blog.tanshuai.me/comment-lines-in-vim.html</id>
+        <content type="html" xml:base="http://blog.tanshuai.me/" xml:lang="en">
+            <![CDATA[ <p><a href="http://stackoverflow.com/questions/1676632/whats-a-quick-way-to-comment-uncomment-lines-in-vim">What&#39;s a quick way to comment/uncomment lines in vim?</a> Stackoverflow 上的一个关于 Vim comments 的问题有很多不错的答案，记录第二个简单基础的方法。</p>
+<p>首先，将光标移动到想要注释的代码块第一行，然后<code>Ctrl + V</code> （<code>Ctrl + Q</code> for Gvim）进入 Visual block mode，移动光标到要注释的代码末行，再 <code>Shift + i</code>，添加行注释<code>//</code>， 最后按下 <code>Esc</code>，Give it a second to work.</p>
+]]>
+        </content>
+    </entry><entry>
+        <title type="html"><![CDATA[Something to think about]]></title>
+        <link href="http://blog.tanshuai.me/something-to-think-about.html"/>
+        <published>2013-07-20T01:25:56.000Z</published>
+        <updated>2013-07-20T01:25:56.000Z</updated>
+        <id>http://blog.tanshuai.me/something-to-think-about.html</id>
+        <content type="html" xml:base="http://blog.tanshuai.me/" xml:lang="en">
+            <![CDATA[ <p>There are two ways of constructing a software design: one way is to make it so simple that there are obviously no deficiencies; the other is to make it so complicated that there are no obvious deficiencies.</p>
+<p>Success in life is a matter not so much of talent and opportunity as of concentration and perserverance.</p>
+<p>From <a href="http://swaroopch.com/notes/python/">A Byte of Python</a></p>
+]]>
+        </content>
+    </entry>
+</feed>

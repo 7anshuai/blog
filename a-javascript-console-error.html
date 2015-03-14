@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="generator" content="nico 0.5.2">
+    <meta name="theme" content="one 0.2">
+    <title>一个 JavaScript 控制台错误</title>
+    <link rel="stylesheet" href="./static/one.css" />
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <a class="home" href="./">谭帅的博客</a>
+        </div>
+        <div class="menu" role="navigation">
+          <a href="../../../../feed.xml">订阅</a>
+        </div>
+      </div>
+    </div>
+    <div class="document yue">
+<div class="hentry" itemscope itemtype="http://schema.org/Article">
+  <h1 class="entry-title" itemprop="name">一个 JavaScript 控制台错误</h1>
+  <div class="entry-content" itemprop="articleBody"><p>Web 浏览器中的开发者工具都会提供一个控制台（或者也叫命令行）。在调试 JS 时，在控制台中打印变量或者测试代码片段都很方便。某日，在调试 JS 代码中，在控制台打印一个变量却出现<code>ReferenceError: varialbe is not defined</code>错误，令我感到迷惑不解。场景大致如下：</p>
+<div class="highlight"><pre><code class="javascript"><span class="keyword">var</span> getSth = <span class="function"><span class="keyword">function</span> <span class="params">(key)</span> {</span>
+    $.ajax({
+        url: <span class="string">'/echo/json'</span>,
+        type: <span class="string">'GET'</span>,
+        data: {key: key},
+        dataType: <span class="string">'json'</span>
+    }).done(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
+        console.log(key)
+    })
+}</code></pre></div><p>AJAX请求成功执行匿名回调函数时，<code>console.log</code>语句会正常打印<code>key</code>值。但将<code>console.log(key)</code>改为 <code>console.log(data)</code>，通过开发工具在此处设置一个断点，代码执行在断点处时在控制台中打印<code>key</code>，则会报错<code>ReferenceError: key is not defined</code>。</p>
+<p>一开始想当然的认为<code>key</code>变量是通过查找作用域链获得，反复调试后发现，如果在匿名回调函数的代码中引用<code>key</code>变量的话，则会在当前作用域创建一个闭包，而 JavaScript 是基于<a href="http://zh.wikipedia.org/wiki/%E4%BD%9C%E7%94%A8%E5%9F%9F">词法作用域</a>，闭包的创建是在词法分析阶段，所以在代码执行时通过控制台动态的引用<code>key</code>值会得到一个<code>ReferenceError</code>。</p>
+</div>
+
+  <div class="entry-meta">
+    <time class="updated" datetime="2014-10-16T08:51:17.000Z" itemprop="dateModified">Thursday, Oct 16th, 2014</time>
+    in <span class="entry-tags">
+      
+      <a href="tag/javascript/">javascript</a>
+      
+      <a href="tag/closure/">closure</a>
+      
+    </span>
+  </div><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"tanshuai"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+</div>
+</div>
+    <div class="footer">
+      <p class="copyright">powered by <a href="http://lab.lepture.com/nico/">nico</a> 0.5.2</p>
+    </div>
+    <script src="./static/one.js"></script>
+  </body>
+</html>
