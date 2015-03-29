@@ -5,6 +5,58 @@
     <link href="http://blog.tanshuai.me/" />
     <id>http://blog.tanshuai.me/feed.xml</id>
     <entry>
+        <title type="html"><![CDATA[在 Node.js 中使用 Asset Pipeline]]></title>
+        <link href="http://blog.tanshuai.me/assets-pipeline-on-nodejs.html"/>
+        <published>2015-03-16T14:03:07.000Z</published>
+        <updated>2015-03-16T14:03:07.000Z</updated>
+        <id>http://blog.tanshuai.me/assets-pipeline-on-nodejs.html</id>
+        <content type="html" xml:base="http://blog.tanshuai.me/" xml:lang="en">
+            <![CDATA[ <blockquote>
+<p>There are only two hard things in Computer Science: cache invalidation and naming things.</p>
+<p>-- Phil Karlton</p>
+</blockquote>
+<p>计算机科学只有两个难题：缓存失效和变量命名。</p>
+<p><em>Coding</em> 中，这两道难题确实无处不在。难题之一缓存失效，Web 中的资源缓存涉及到服务器和浏览器两端的各种缓存机制（详情可阅读腾讯 AlloyTeam 的博客 <a href="http://alloyteam.com/2012/03/web-cache-1-web-cache-overview/">Web 缓存机制系列</a>）。当 Web 应用进行版本更新时，需要发布新的资源文件并更新缓存。那怎么让 Web 浏览器中原有的缓存失效，加载新的资源文件并缓存到客户端的计算机上呢？常见的两种做法是：</p>
+<ul>
+<li>传统手工作业</li>
+<li>基于日期的请求字符串</li>
+</ul>
+<p>这两种方法都有明显的缺点，手动控制文件版本的做法通常是这样的：</p>
+<div class="highlight"><pre><code class="xml"><span class="comment">&lt;!-- version 0.0.1 --&gt;</span>
+<span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"http://cdn.example.com/static/0.0.1/js/app.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+
+<span class="comment">&lt;!-- version 0.0.2 --&gt;</span>
+<span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"http://cdn.example.com/static/0.0.2/js/app.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></code></pre></div><p>基于日期的请求字符串：</p>
+<div class="highlight"><pre><code class="xml"><span class="comment">&lt;!-- version 0.0.1 --&gt;</span>
+<span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"http://cdn.example.com/static/js/app.js?1427594349480"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+
+<span class="comment">&lt;!-- version 0.0.2 --&gt;</span>
+<span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"http://cdn.example.com/static/js/app.js?1427594349481"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></code></pre></div><p>这两种方法都有明显的缺点,传统手工作业是繁琐低效的，而基于日期的请求字符串的缓存并不可靠。在查看过 <a href="https://github.com/">GitHub</a> 的网页源码后，发现他们组织程序的静态资源方式有所不同：</p>
+<div class="highlight"><pre><code class="xml"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"https://assets-cdn.github.com/assets/github-d869f6edeea2dbd9c7c3595e2f31cf8a1530bd36eaa84707461f65c5ee848853.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></code></pre></div><p>文件名后面加上了一串字符串（基于MD5生成），顿觉莫名的高大上啊。偶尔在 <a href="https://ruby-china.org/">Ruby China</a> 闲逛得知，这是 Rails 3.1 版本开始引入的静态资源管理方式 <a href="http://guides.ruby-china.org/asset_pipeline.html">Asset Pipeline</a>。</p>
+<h2 id="asset-pipeline-是什么？">Asset Pipeline 是什么？</h2><p>Rails 指南中提到，Asset Pipeline 提供了一个框架，用于连接、压缩 JavaScript 和 CSS 文件。还允许使用其他语言和预处理器编写 JavaScript 和 CSS，例如 CoffeeScript、Sass 和 ERB。它提供了三个主要功能：</p>
+<ul>
+<li>连接合并 JavaScript 和 CSS 文件，减少页面的 HTTP 请求。</li>
+<li>压缩 JavaScript 和 CSS 文件（减重瘦身上前线）</li>
+<li>高级语言及预处理器支持，允许使用高级语言编写静态资源，再使用预处理器转换成真正的静态资源。默认支持用来编写 CSS 的 Sass，用来编写 JavaScript 的 CoffeeScript。</li>
+</ul>
+<p>在生产环境中，Rails 通过 Asset Pipeline 技术在文件名后加上 MD5 指纹，以便浏览器缓存，指纹变了缓存就会过期。修改文件的内容后，指纹会自动变化。</p>
+<h2 id="md5-指纹">MD5 指纹</h2><p>Rails 指南中详细解释了指纹。指纹可以根据文件内容生成文件名，文件内容变化后，文件名也会改变。对于静态内容，或者很少改动的内容，在不同的服务器之间，不同的部署日期之间，使用指纹可以区别文件的两个版本内容是否一样。</p>
+<p>如果文件名基于内容而定，而且文件名是唯一的，HTTP 报头会建议在所有可能的地方（CDN，ISP，网络设备，网页浏览器）存储一份该文件的副本。修改文件内容后，指纹会发生变化，因此远程客户端会重新请求文件。这种技术叫做“缓存爆裂”（cache busting）。</p>
+<h2 id="connect-assets">connect-assets</h2><p>不同语言不同框架都有类似 Rails Asset Pipeline 的实现，<a href="https://github.com/adunkman/connect-assets">connect assets</a> 是为 Node.js 打造的 asset pipeline。它也实现了以上所述的三个主要功能：合并，压缩 JavaScript/CSS 文件，高级语言预处理。在 Node.js 中也可以给静态资源添加指纹，使用更有效的缓存技术。</p>
+<p>使用方法也很简单，第一步在项目中安装 connect asset：</p>
+<div class="highlight"><pre><code class="bash">npm install connect-asset</code></pre></div><p>第二步，在 Express 应用中添加配置代码：</p>
+<div class="highlight"><pre><code class="javascript">app.use(require(<span class="string">'connect-assets'</span>)());</code></pre></div><p>最后，在项目中创建一个 <code>assets</code> 文件夹，并分别将 JavaScript 和 CSS 文件放入 <code>/assets/js</code> 和 <code>/assets/css</code>。</p>
+<p>Node.js 应用就可以使用最基本的 asset pipeline 功能了，更多高级功能请参考官方文档。一个使用 connect assets 的 Node.js App <a href="http://node.tanshuai.me/">Node starter</a>，fork from <a href="https://github.com/sahat/hackathon-starter">Hackathon Starter</a>。</p>
+<p>扩展阅读：</p>
+<ul>
+<li><a href="http://code.google.com/speed/page-speed/docs/caching.html">Optimize caching</a></li>
+<li><a href="http://www.stevesouders.com/blog/2008/08/23/revving-filenames-dont-use-querystring/">Revving Filenames: dont&#39;t use querystring</a></li>
+</ul>
+<p>周末福利:</p>
+<p>豆瓣女神，独立音乐人，北大美女才女 － 程璧的官方主页 <a href="http://www.annapatio.com/">Anna&#39;s Patio</a> 是基于 Ruby on Rails，真心很赞啊！</p>
+]]>
+        </content>
+    </entry><entry>
         <title type="html"><![CDATA[基本的命令行编辑技巧]]></title>
         <link href="http://blog.tanshuai.me/the-basic-command-line-editing.html"/>
         <published>2015-01-26T14:46:54.000Z</published>
@@ -28,17 +80,16 @@
 <code>C-p</code> 可以往上移动一行，<code>C-n</code> 往下移动一行，<code>C-R</code> 可以反向搜索， <code>C-s</code> 向前搜索。</p>
 <h2 id="键值绑定">键值绑定</h2><p>可以在 <code>~/.inputrc</code> 文件中增加一些自定义的命令和功能。常见的形式是： <code>key-name: function-name</code> 或 <code>&quot;string&quot;: function-name</code>，还可以通过 <code>set option-name vale</code> 设置选项。
 一个简单的例子：</p>
-<pre># I prefer vi-style editing:
-set editing-mode vi
+<div class="highlight"><pre><code class="bash"><span class="comment"># I prefer vi-style editing:</span>
+<span class="keyword">set</span> editing-mode vi
 
-# Edit using a single line:
-set horizontal-scroll-mode On
+<span class="comment"># Edit using a single line:</span>
+<span class="keyword">set</span> horizontal-scroll-mode On
 
-# Rebind some keys:
+<span class="comment"># Rebind some keys:</span>
 Meta-h: backward-kill-word
-&quot;\C-u&quot;: universal-argument
-&quot;\C-x\C-r&quot;: re-read-init-file
-</pre>]]>
+<span class="string">"\C-u"</span>: universal-argument
+<span class="string">"\C-x\C-r"</span>: re-read-init-file</code></pre></div>]]>
         </content>
     </entry><entry>
         <title type="html"><![CDATA[一个 JavaScript 控制台错误]]></title>

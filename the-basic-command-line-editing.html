@@ -39,17 +39,16 @@
 <code>C-p</code> 可以往上移动一行，<code>C-n</code> 往下移动一行，<code>C-R</code> 可以反向搜索， <code>C-s</code> 向前搜索。</p>
 <h2 id="键值绑定">键值绑定</h2><p>可以在 <code>~/.inputrc</code> 文件中增加一些自定义的命令和功能。常见的形式是： <code>key-name: function-name</code> 或 <code>&quot;string&quot;: function-name</code>，还可以通过 <code>set option-name vale</code> 设置选项。
 一个简单的例子：</p>
-<pre># I prefer vi-style editing:
-set editing-mode vi
+<div class="highlight"><pre><code class="bash"><span class="comment"># I prefer vi-style editing:</span>
+<span class="keyword">set</span> editing-mode vi
 
-# Edit using a single line:
-set horizontal-scroll-mode On
+<span class="comment"># Edit using a single line:</span>
+<span class="keyword">set</span> horizontal-scroll-mode On
 
-# Rebind some keys:
+<span class="comment"># Rebind some keys:</span>
 Meta-h: backward-kill-word
-&quot;\C-u&quot;: universal-argument
-&quot;\C-x\C-r&quot;: re-read-init-file
-</pre></div>
+<span class="string">"\C-u"</span>: universal-argument
+<span class="string">"\C-x\C-r"</span>: re-read-init-file</code></pre></div></div>
 
   <div class="entry-meta">
     <time class="updated" datetime="2015-01-26T14:46:54.000Z" itemprop="dateModified">Monday, Jan 26th, 2015</time>
