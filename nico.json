@@ -6,7 +6,7 @@
     "siteurl": "http://blog.tanshuai.me/",
     "duoshuo": "tanshuai",
     "navigation": [
-        {"title": "订阅", "link": "/feed.xml"}
+        {"title": "订阅", "link": "feed.xml"}
     ],
     "permalink": "{{directory}}/{{filename}}.html",
     "perpage": 10,

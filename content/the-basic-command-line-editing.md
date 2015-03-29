@@ -31,13 +31,15 @@ GNU Bash shell 提供了 [Command line editing](https://www.gnu.org/software/bas
 可以在 `~/.inputrc` 文件中增加一些自定义的命令和功能。常见的形式是： `key-name: function-name` 或 `"string": function-name`，还可以通过 `set option-name vale` 设置选项。
 一个简单的例子：
 
-    # I prefer vi-style editing:
-    set editing-mode vi
+```bash
+# I prefer vi-style editing:
+set editing-mode vi
 
-    # Edit using a single line:
-    set horizontal-scroll-mode On
+# Edit using a single line:
+set horizontal-scroll-mode On
 
-    # Rebind some keys:
-    Meta-h: backward-kill-word
-    "\C-u": universal-argument
-    "\C-x\C-r": re-read-init-file
+# Rebind some keys:
+Meta-h: backward-kill-word
+"\C-u": universal-argument
+"\C-x\C-r": re-read-init-file
+```
