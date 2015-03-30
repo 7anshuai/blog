@@ -62,12 +62,12 @@ Rails 指南中详细解释了指纹。指纹可以根据文件内容生成文�
 
 ## connect-assets
 
-不同语言不同框架都有类似 Rails Asset Pipeline 的实现，[connect assets](https://github.com/adunkman/connect-assets) 是为 Node.js 打造的 asset pipeline。它也实现了以上所述的三个主要功能：合并，压缩 JavaScript/CSS 文件，高级语言预处理。在 Node.js 中也可以给静态资源添加指纹，使用更有效的缓存技术。
+不同语言不同框架都有类似 Rails Asset Pipeline 的实现，[connect-assets](https://github.com/adunkman/connect-assets) 是为 Node.js 打造的 Asset Pipeline。它也实现了以上所述的三个主要功能：合并，压缩 JavaScript/CSS 文件，高级语言预处理。在 Node.js 中也可以给静态资源添加指纹，使用更有效的缓存技术。
 
-使用方法也很简单，第一步在项目中安装 connect asset：
+使用方法也很简单，第一步在项目中安装 connect-asset：
 
 ```bash
-npm install connect-asset
+npm install connect-assets
 ```
 
 第二步，在 Express 应用中添加配置代码：
@@ -78,7 +78,9 @@ app.use(require('connect-assets')());
 
 最后，在项目中创建一个 `assets` 文件夹，并分别将 JavaScript 和 CSS 文件放入 `/assets/js` 和 `/assets/css`。
 
-Node.js 应用就可以使用最基本的 asset pipeline 功能了，更多高级功能请参考官方文档。一个使用 connect assets 的 Node.js App [Node starter](http://node.tanshuai.me/)，fork from [Hackathon Starter](https://github.com/sahat/hackathon-starter)。
+Node.js 应用就可以使用最基本的 connect-assets 功能了，更多高级功能请参考官方文档。
+
+一个使用 connect-assets 的 Node.js App [Node starter](http://node.tanshuai.me/)，fork from [Hackathon Starter](https://github.com/sahat/hackathon-starter)。
 
 扩展阅读：
 

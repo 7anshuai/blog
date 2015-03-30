@@ -5,6 +5,7 @@
     "sitename": "谭帅的博客",
     "siteurl": "http://blog.tanshuai.me/",
     "duoshuo": "tanshuai",
+    "google": "UA-59443769-2",
     "navigation": [
         {"title": "订阅", "link": "feed.xml"}
     ],
