@@ -68,7 +68,24 @@
 <p>使用方法也很简单，第一步在项目中安装 connect-asset：</p>
 <div class="highlight"><pre><code class="bash">npm install connect-assets</code></pre></div><p>第二步，在 Express 应用中添加配置代码：</p>
 <div class="highlight"><pre><code class="javascript">app.use(require(<span class="string">'connect-assets'</span>)());</code></pre></div><p>最后，在项目中创建一个 <code>assets</code> 文件夹，并分别将 JavaScript 和 CSS 文件放入 <code>/assets/js</code> 和 <code>/assets/css</code>。</p>
-<p>Node.js 应用就可以使用最基本的 connect-assets 功能了，更多高级功能请参考官方文档。</p>
+<p>Node.js 应用就可以使用最基本的 connect-assets 功能了。</p>
+<h3 id="标记函数">标记函数</h3><p>connect-assets 提供了三个名为 <code>js</code>，<code>css</code>, <code>assetPath</code> 的全局函数，可以在视图文件中使用它们。标记函数返回需要的包含最新版本的静态资源（或资源的路径）HTML 标记。例如，在一个 Jade 模板中的代码：</p>
+<pre>!= css(&quot;normalize&quot;)
+!= js(&quot;jquery&quot;)</pre><p><code>!=</code> 是 Jade 语法， 用于运行 JS 和显示输出，结果如下：</p>
+<div class="highlight"><pre><code class="xml"><span class="tag">&lt;<span class="title">link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">href</span>=<span class="value">"/css/normalize-[hash].css"</span> /&gt;</span>
+<span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"/js/jquery-[hash].js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></code></pre></div><p>你可以传递特殊属性给函数 <code>css</code> 或 <code>js</code>：</p>
+<pre>!= css(&quot;normalize&quot;, {&quot;data-turbolinks-track&quot;: true})
+!= js(&quot;jquery&quot;, {async: true})</pre><p>结果如下：</p>
+<div class="highlight"><pre><code class="xml"><span class="tag">&lt;<span class="title">link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">href</span>=<span class="value">"/css/normalize-[hash].css"</span> <span class="attribute">data-turbolinks-track</span> /&gt;</span>
+<span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"/js/jquery-[hash].js"</span> <span class="attribute">async</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></code></pre></div><h3 id="sprockets-风格的合并">Sprockets 风格的合并</h3><p>可以在 <code>.js.coffee</code> 和 <code>.js</code> 文件中使用 Sprockets-style 语法指定依赖关系。</p>
+<p>在 CoffeeScript 中：</p>
+<div class="highlight"><pre><code class="coffeescript"><span class="comment">#= require dependency</span></code></pre></div><p>在 JavaScript 中：</p>
+<div class="highlight"><pre><code class="javascript"><span class="comment">//= require dependency</span></code></pre></div><p>当你这样做并在 <code>js</code> 函数中指定该文件，会产生两个效果：</p>
+<ul>
+<li>默认的你会得到多个 <code>script</code>，按顺序输出你指定的所有依赖。</li>
+<li>如果你传递 <code>build: true</code> 选项给 connect-assets（当 <code>env == &#39;production&#39;</code> 时默认开启），你会得到一个单独的标记，它指向一个将所有依赖目标都编译，合并，压缩（通过 UglifyJS）的 JavaScript 文件。</li>
+</ul>
+<p>如果你想包含整个文件夹的脚本，使用 <code>//= require_tree dir</code> 代替 <code>//= require file</code>。</p>
 <p>一个使用 connect-assets 的 Node.js App <a href="http://node.tanshuai.me/">Node starter</a>，fork from <a href="https://github.com/sahat/hackathon-starter">Hackathon Starter</a>。</p>
 <p>扩展阅读：</p>
 <ul>
