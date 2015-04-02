@@ -78,7 +78,60 @@ app.use(require('connect-assets')());
 
 最后，在项目中创建一个 `assets` 文件夹，并分别将 JavaScript 和 CSS 文件放入 `/assets/js` 和 `/assets/css`。
 
-Node.js 应用就可以使用最基本的 connect-assets 功能了，更多高级功能请参考官方文档。
+Node.js 应用就可以使用最基本的 connect-assets 功能了。
+
+### 标记函数
+
+connect-assets 提供了三个名为 `js`，`css`, `assetPath` 的全局函数，可以在视图文件中使用它们。标记函数返回需要的包含最新版本的静态资源（或资源的路径）HTML 标记。例如，在一个 Jade 模板中的代码：
+
+```
+!= css("normalize")
+!= js("jquery")
+```
+
+`!=` 是 Jade 语法， 用于运行 JS 和显示输出，结果如下：
+
+```html
+<link rel="stylesheet" href="/css/normalize-[hash].css" />
+<script src="/js/jquery-[hash].js"></script>
+```
+
+你可以传递特殊属性给函数 `css` 或 `js`：
+
+```
+!= css("normalize", {"data-turbolinks-track": true})
+!= js("jquery", {async: true})
+```
+
+结果如下：
+
+```html
+<link rel="stylesheet" href="/css/normalize-[hash].css" data-turbolinks-track />
+<script src="/js/jquery-[hash].js" async></script>
+```
+
+### Sprockets 风格的合并
+
+可以在 `.js.coffee` 和 `.js` 文件中使用 Sprockets-style 语法指定依赖关系。
+
+在 CoffeeScript 中：
+
+```coffeescript
+#= require dependency
+```
+
+在 JavaScript 中：
+
+```javascript
+//= require dependency
+```
+
+当你这样做并在 `js` 函数中指定该文件，会产生两个效果：
+
+- 默认的你会得到多个 `script`，按顺序输出你指定的所有依赖。
+- 如果你传递 `build: true` 选项给 connect-assets（当 `env == 'production'` 时默认开启），你会得到一个单独的标记，它指向一个将所有依赖目标都编译，合并，压缩（通过 UglifyJS）的 JavaScript 文件。
+
+如果你想包含整个文件夹的脚本，使用 `//= require_tree dir` 代替 `//= require file`。
 
 一个使用 connect-assets 的 Node.js App [Node starter](http://node.tanshuai.me/)，fork from [Hackathon Starter](https://github.com/sahat/hackathon-starter)。
 
