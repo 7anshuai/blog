@@ -7,6 +7,8 @@
     "duoshuo": "tanshuai",
     "google": "UA-59443769-2",
     "navigation": [
+        {"title": "工作", "link": "/work/index.html"},
+        {"title": "生活", "link": "/life/index.html"},
         {"title": "订阅", "link": "feed.xml"}
     ],
     "permalink": "{{directory}}/{{filename}}.html",
