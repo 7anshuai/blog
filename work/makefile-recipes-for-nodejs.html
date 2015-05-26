@@ -4,9 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <meta name="generator" content="nico 0.5.2">
-    <meta name="theme" content="one 0.2">
+    <meta name="theme" content="minimal 0.1">
     <title>[译] 为 Node.js 包准备的 Makefile</title>
-    <link rel="stylesheet" href="../static/one.css" />
+    <link rel="stylesheet" href="https://github.com/themes/minimal/stylesheets/styles.css" />
+    <link rel="stylesheet" href="../static/syntax.css" />
+    <link rel="stylesheet" href="../static/style.css" />
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-59443769-2']);
@@ -20,19 +22,24 @@
     </script>
   </head>
   <body>
-    <div class="header">
-      <div class="container">
-        <div class="brand">
-          <a class="home" href="../">谭帅的博客</a>
-        </div>
-        <div class="menu" role="navigation">
-          <a href="./">工作</a>
-          <a href="../life/">生活</a>
-          <a href="../feed.xml">订阅</a>
-        </div>
-      </div>
-    </div>
-    <div class="document yue">
+    <div class="wrapper">
+      <header>
+        <h1>
+          <a class="home" href="../">tanshuai.blog()</a>
+        </h1>
+        <nav class="menu" role="navigation">
+          <p class="view">
+            <a href="./">work</a>
+          </p>
+          <p class="view">
+            <a href="../life/">life of shuai</a>
+          </p>
+          <p class="view">
+            <a href="../feed.xml">feed</a>
+          </p>
+        </nav>
+      </header>
+      <section>
 <div class="hentry" itemscope itemtype="http://schema.org/Article">
   <h1 class="entry-title" itemprop="name">[译] 为 Node.js 包准备的 Makefile</h1>
   <div class="entry-content" itemprop="articleBody"><p>当你编写 Node.js 代码时，在构建－测试－发布周期中肯定会有一些事情需要自动化。我使用 <code>make</code> 程序来完成这些任务，主要是因为它的简单明了。</p>
@@ -95,9 +102,9 @@ release-major: build test
     <time class="updated" datetime="2015-04-12T00:00:00.000Z" itemprop="dateModified">Sunday, Apr 12th, 2015</time>
     in <span class="entry-tags">
       
-      <a href="../tag/node.js/">node.js</a>
+      <a href="../tag/node.js/">#node.js</a>
       
-      <a href="../tag/shell/">shell</a>
+      <a href="../tag/shell/">#shell</a>
       
     </span>
   </div><div class="ds-thread" data-thread-key="95f8a6722f9b674ac4dd79239c171a18" data-title="[译] 为 Node.js 包准备的 Makefile"></div>
@@ -113,10 +120,11 @@ release-major: build test
   })();
 </script>
 </div>
-</div>
-    <div class="footer">
-      <p class="copyright">powered by <a href="http://lab.lepture.com/nico/">nico</a> 0.5.2</p>
+</section>
+      <footer>
+        <p class="copyright">powered by <a href="http://lab.lepture.com/nico/">nico</a> 0.5.2</p>
+      </footer>
     </div>
-    <script src="../static/one.js"></script>
+    <script src="../static/script.js"></script>
   </body>
 </html>

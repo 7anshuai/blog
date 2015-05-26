@@ -4,9 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <meta name="generator" content="nico 0.5.2">
-    <meta name="theme" content="one 0.2">
+    <meta name="theme" content="minimal 0.1">
     <title>基本的命令行编辑技巧</title>
-    <link rel="stylesheet" href="../static/one.css" />
+    <link rel="stylesheet" href="https://github.com/themes/minimal/stylesheets/styles.css" />
+    <link rel="stylesheet" href="../static/syntax.css" />
+    <link rel="stylesheet" href="../static/style.css" />
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-59443769-2']);
@@ -20,19 +22,24 @@
     </script>
   </head>
   <body>
-    <div class="header">
-      <div class="container">
-        <div class="brand">
-          <a class="home" href="../">谭帅的博客</a>
-        </div>
-        <div class="menu" role="navigation">
-          <a href="./">工作</a>
-          <a href="../life/">生活</a>
-          <a href="../feed.xml">订阅</a>
-        </div>
-      </div>
-    </div>
-    <div class="document yue">
+    <div class="wrapper">
+      <header>
+        <h1>
+          <a class="home" href="../">tanshuai.blog()</a>
+        </h1>
+        <nav class="menu" role="navigation">
+          <p class="view">
+            <a href="./">work</a>
+          </p>
+          <p class="view">
+            <a href="../life/">life of shuai</a>
+          </p>
+          <p class="view">
+            <a href="../feed.xml">feed</a>
+          </p>
+        </nav>
+      </header>
+      <section>
 <div class="hentry" itemscope itemtype="http://schema.org/Article">
   <h1 class="entry-title" itemprop="name">基本的命令行编辑技巧</h1>
   <div class="entry-content" itemprop="articleBody"><p>GNU Bash shell 提供了 <a href="https://www.gnu.org/software/bash/manual/html_node/Command-Line-Editing.html">Command line editing</a> 功能，它是由 <a href="http://tiswww.case.edu/php/chet/readline/rltop.html">Readline library</a> 实现的。Python 交互式命令行和 node.js REPL等程序都实现了类似的命令行编辑功能。Command line editing 支持 Emacs-style 和 Vi-style 的命令风格，默认的是 Emacs-style。</p>
@@ -67,7 +74,7 @@ Meta-h: backward-kill-word
     <time class="updated" datetime="2015-01-26T14:46:54.000Z" itemprop="dateModified">Monday, Jan 26th, 2015</time>
     in <span class="entry-tags">
       
-      <a href="../tag/shell/">shell</a>
+      <a href="../tag/shell/">#shell</a>
       
     </span>
   </div><div class="ds-thread" data-thread-key="022e37b772411558e111a06bed7a43f9" data-title="基本的命令行编辑技巧"></div>
@@ -83,10 +90,11 @@ Meta-h: backward-kill-word
   })();
 </script>
 </div>
-</div>
-    <div class="footer">
-      <p class="copyright">powered by <a href="http://lab.lepture.com/nico/">nico</a> 0.5.2</p>
+</section>
+      <footer>
+        <p class="copyright">powered by <a href="http://lab.lepture.com/nico/">nico</a> 0.5.2</p>
+      </footer>
     </div>
-    <script src="../static/one.js"></script>
+    <script src="../static/script.js"></script>
   </body>
 </html>

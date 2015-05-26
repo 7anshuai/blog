@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <title>谭帅的博客</title>
+    <title>tanshuai.blog()</title>
     <link href="http://blog.tanshuai.me/feed.xml" rel="self" />
     <link href="http://blog.tanshuai.me/" />
     <id>http://blog.tanshuai.me/feed.xml</id>
