@@ -1,15 +1,16 @@
 {
     "source": "content",
     "output": "site",
-    "theme": "themes/one",
-    "sitename": "谭帅的博客",
+    "theme": "../nico-minimal",
+    "sitename": "tanshuai.blog()",
     "siteurl": "http://blog.tanshuai.me/",
     "duoshuo": "tanshuai",
     "google": "UA-59443769-2",
+    "footer": "theme <a href='https://github.com/7anshuai/nico-minimal'>nico-minimal</a>",
     "navigation": [
-        {"title": "工作", "link": "work/index.html"},
-        {"title": "生活", "link": "life/index.html"},
-        {"title": "订阅", "link": "feed.xml"}
+        {"title": "work", "link": "work/index.html"},
+        {"title": "life of shuai", "link": "life/index.html"},
+        {"title": "feed", "link": "feed.xml"}
     ],
     "permalink": "{{directory}}/{{filename}}.html",
     "perpage": 10,
@@ -19,7 +20,6 @@
         "nico.FileWriter",
         "nico.StaticWriter",
         "nico.ArchiveWriter",
-        "nico.YearWriter",
         "nico.TagWriter",
         "nico.DirectoryWriter",
         "nico.FeedWriter"
