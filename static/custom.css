@@ -1,0 +1,9 @@
+/* layout */
+.home {
+  color: #222;
+  font-weight: 600;
+}
+
+.item-title time {
+  font-weight: 300;
+}
