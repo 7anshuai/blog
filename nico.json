@@ -1,11 +1,11 @@
 {
     "source": "content",
     "output": "site",
-    "theme": "../nico-minimal",
+    "theme": "themes/minimal",
     "sitename": "tanshuai.blog()",
     "siteurl": "http://blog.tanshuai.me/",
     "duoshuo": "tanshuai",
-    "google": "UA-59443769-2",
+    "google": "UA-59443769-1",
     "footer": "theme <a href='https://github.com/7anshuai/nico-minimal'>nico-minimal</a>",
     "navigation": [
         {"title": "work", "link": "work/index.html"},
