@@ -3,10 +3,10 @@
     "output": "site",
     "theme": "themes/minimal",
     "sitename": "tanshuai.blog()",
-    "siteurl": "http://blog.tanshuai.me/",
+    "siteurl": "http://7anshuai.js.org/blog/",
     "duoshuo": "tanshuai",
     "google": "UA-59443769-1",
-    "footer": "theme <a href='https://github.com/7anshuai/nico-minimal'>nico-minimal</a>",
+    "footer": "<small>theme <a href='https://github.com/7anshuai/nico-minimal'>nico-minimal</a></small>",
     "navigation": [
         {"title": "work", "link": "work/index.html"},
         {"title": "life of shuai", "link": "life/index.html"},
