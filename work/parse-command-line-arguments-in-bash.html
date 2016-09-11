@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="generator" content="nico 0.5.2">
+    <meta name="theme" content="minimal 0.1">
+    <title>在 Bash 中解析命令行参数</title>
+    <link rel="shortcut icon" href="http://7anshuai.js.org/favicon.ico" />
+    <link rel="apple-touch-icon" href="http://7anshuai.js.org/apple-touch-icon.png" />
+    <link rel="stylesheet" href="../static/style.css" />
+    <link rel="stylesheet" href="../static/syntax.css" />
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-59443769-1']);
+      _gaq.push(['_trackPageview']);
+      _gaq.push(['_trackPageLoadTime']);
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = 'https://ssl.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <a href="../"><h1>tanshuai.blog()</h1></a>
+        <nav class="menu" role="navigation">
+          <p class="view">
+            <a href="./">work</a>
+          </p>
+          <p class="view">
+            <a href="../life/">life of shuai</a>
+          </p>
+          <p class="view">
+            <a href="../feed.xml">feed</a>
+          </p>
+        </nav>
+      </header>
+      <section>
+<div class="hentry" itemscope itemtype="http://schema.org/Article">
+  <h1 class="entry-title" itemprop="name">在 Bash 中解析命令行参数</h1>
+  <div class="entry-content" itemprop="articleBody"><p>最近的一个前端小项目是智能 Wi-Fi 音箱 <a href="http://sugrsugr.com">Sugr Cube</a> 中的 Web 上传歌曲界面，使用了 Require.js 组织代码，文件上传部分基于 <a href="https://github.com/blueimp/jQuery-File-Upload">jQuery File Upload</a>。Web page 编写完后需要使用 r.js 打包处理下，并将生成的文件上传到硬件设备里的 <a href="https://github.com/ankushagarwal/nweb">Nweb</a> 目录下。</p>
+<h2 id="项目结构">项目结构</h2><pre>|--node_modules
+|  |-- blueimp-file-upload-node
+|  |  本地文件上传服务器
+|  |-- requirejs
+|  |  requirejs optimizer (r.js)
+|  |-- inliner
+|  |  Node utility to inline images, CSS and JavaScript for a web page
+|--publics
+|  静态文件（css，js，images等）
+|-- package.json
+|  npm 项目配置
+|-- index.html</pre><h2 id="npm-scripts">npm scripts</h2><p>编写 <a href="https://docs.npmjs.com/misc/scripts">npm scripts</a> 用来运行相关脚本：</p>
+<div class="highlight"><pre><code class="javascript">{
+  ...,
+  <span class="string">"scripts"</span>: {
+    <span class="string">"build"</span>: <span class="string">"r.js -o baseUrl=public/js paths.requireLib=require paths.jquery=jquery name=app include=requireLib out=public/js/app-built.js"</span>,
+    <span class="string">"inliner"</span>: <span class="string">"inliner -vs index.html &gt; www/index.html"</span>,
+    <span class="string">"server"</span>: <span class="string">"node node_modules/blueimp-file-upload-node/server.js"</span>,
+    <span class="string">"test"</span>: <span class="string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span>
+  },
+  ...
+}</code></pre></div><p>OK，页面开发完后运行相应的命令 <code>npm run build</code>，<code>npm run inliner</code> 之后，再将生成好的单一 HTML 文件（www/index.html）scp 到硬件设备的文件 www 目录下。那么问题来了，调试过程中需要频繁的重复这一过程，而且硬件设备的局域网 IP 地址也会动态变化，我需要个一键部署的 shell 脚本，比如这样：</p>
+<pre>./publish --user root --host 192.168.1.99</pre><h2 id="bash-script">Bash script</h2><p>如何编写一个能接受命令行参数的 Bash 脚本？在 stackoverflow 上找到大家推荐的方法：使用没有 getopt[s] 的 straight bash。</p>
+<h3 id="空格分离的-straight-bash">空格分离的 Straight Bash</h3><p>使用方法：<code>./myscript.sh -e conf -s /etc -l /usr/lib /etc/hosts</code></p>
+<div class="highlight"><pre><code class="bash"><span class="shebang">#!/bin/bash</span>
+<span class="comment"># Use -gt 1 to consume two arguments per pass in the loop (e.g. each</span>
+<span class="comment"># argument has a corresponding value to go with it).</span>
+<span class="comment"># Use -gt 0 to consume one or more arguments per pass in the loop (e.g.</span>
+<span class="comment"># some arguments don't have a corresponding value to go with it such</span>
+<span class="comment"># as in the --default example).</span>
+<span class="comment"># note: if this is set to -gt 0 the /etc/hosts part is not recognized ( may be a bug )</span>
+<span class="keyword">while</span> [[ <span class="variable">$#</span> <span class="operator">-gt</span> <span class="number">1</span> ]]
+<span class="keyword">do</span>
+key=<span class="string">"<span class="variable">$1</span>"</span>
+
+<span class="keyword">case</span> <span class="variable">$key</span> <span class="keyword">in</span>
+    <span class="operator">-e</span>|--extension)
+    EXTENSION=<span class="string">"<span class="variable">$2</span>"</span>
+    shift <span class="comment"># past argument</span>
+    ;;
+    <span class="operator">-s</span>|--searchpath)
+    SEARCHPATH=<span class="string">"<span class="variable">$2</span>"</span>
+    shift <span class="comment"># past argument</span>
+    ;;
+    <span class="operator">-l</span>|--lib)
+    LIBPATH=<span class="string">"<span class="variable">$2</span>"</span>
+    shift <span class="comment"># past argument</span>
+    ;;
+    --default)
+    DEFAULT=YES
+    ;;
+    *)
+            <span class="comment"># unknown option</span>
+    ;;
+<span class="keyword">esac</span>
+shift <span class="comment"># past argument or value</span>
+<span class="keyword">done</span>
+<span class="built_in">echo</span> FILE EXTENSION  = <span class="string">"<span class="variable">${EXTENSION}</span>"</span>
+<span class="built_in">echo</span> SEARCH PATH     = <span class="string">"<span class="variable">${SEARCHPATH}</span>"</span>
+<span class="built_in">echo</span> LIBRARY PATH    = <span class="string">"<span class="variable">${LIBPATH}</span>"</span>
+<span class="built_in">echo</span> <span class="string">"Number files in SEARCH PATH with EXTENSION:"</span> $(ls -<span class="number">1</span> <span class="string">"<span class="variable">${SEARCHPATH}</span>"</span>/*.<span class="string">"<span class="variable">${EXTENSION}</span>"</span> | wc <span class="operator">-l</span>)
+<span class="keyword">if</span> [[ -n <span class="variable">$1</span> ]]; <span class="keyword">then</span>
+    <span class="built_in">echo</span> <span class="string">"Last line of file specified as non-opt/last argument:"</span>
+    tail -<span class="number">1</span> <span class="variable">$1</span>
+<span class="keyword">fi</span></code></pre></div><h3 id="等号分离的-straight-bash">等号分离的 Straight Bash</h3><p>使用方法：<code>./myscript.sh -e=conf -s=/etc -l=/usr/lib /etc/hosts</code></p>
+<div class="highlight"><pre><code class="bash"><span class="shebang">#!/bin/bash
+</span>
+<span class="keyword">for</span> i <span class="keyword">in</span> <span class="string">"<span class="variable">$@</span>"</span>
+<span class="keyword">do</span>
+<span class="keyword">case</span> <span class="variable">$i</span> <span class="keyword">in</span>
+    <span class="operator">-e</span>=*|--extension=*)
+    EXTENSION=<span class="string">"<span class="variable">${i#*=}</span>"</span>
+    shift <span class="comment"># past argument=value</span>
+    ;;
+    <span class="operator">-s</span>=*|--searchpath=*)
+    SEARCHPATH=<span class="string">"<span class="variable">${i#*=}</span>"</span>
+    shift <span class="comment"># past argument=value</span>
+    ;;
+    <span class="operator">-l</span>=*|--lib=*)
+    LIBPATH=<span class="string">"<span class="variable">${i#*=}</span>"</span>
+    shift <span class="comment"># past argument=value</span>
+    ;;
+    --default)
+    DEFAULT=YES
+    shift <span class="comment"># past argument with no value</span>
+    ;;
+    *)
+            <span class="comment"># unknown option</span>
+    ;;
+<span class="keyword">esac</span>
+<span class="keyword">done</span>
+<span class="built_in">echo</span> <span class="string">"FILE EXTENSION  = <span class="variable">${EXTENSION}</span>"</span>
+<span class="built_in">echo</span> <span class="string">"SEARCH PATH     = <span class="variable">${SEARCHPATH}</span>"</span>
+<span class="built_in">echo</span> <span class="string">"LIBRARY PATH    = <span class="variable">${LIBPATH}</span>"</span>
+<span class="built_in">echo</span> <span class="string">"Number files in SEARCH PATH with EXTENSION:"</span> $(ls -<span class="number">1</span> <span class="string">"<span class="variable">${SEARCHPATH}</span>"</span>/*.<span class="string">"<span class="variable">${EXTENSION}</span>"</span> | wc <span class="operator">-l</span>)
+<span class="keyword">if</span> [[ -n <span class="variable">$1</span> ]]; <span class="keyword">then</span>
+    <span class="built_in">echo</span> <span class="string">"Last line of file specified as non-opt/last argument:"</span>
+    tail -<span class="number">1</span> <span class="variable">$1</span>
+<span class="keyword">fi</span></code></pre></div><p>To better understand <code>${i#*=}</code> search for &quot;Substring Removal&quot; in <a href="http://tldp.org/LDP/abs/html/string-manipulation.html">this guide</a>. It is functionally equivalent to <code>sed &#39;s/[^=]*=//&#39; &lt;&lt;&lt; &quot;$i&quot;</code> which calls a needless subprocess or <code>echo &quot;$i&quot; | sed &#39;s/[^=]*=//&#39;</code> which calls two needless subprocesses.</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="http://www.panix.com/~elflord/unix/bash-tute.html">A quick guide to writing scripts using the bash shell</a></li>
+<li><a href="http://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash">How do I parse command line arguments in bash?</a></li>
+</ul>
+</div>
+
+  <div class="entry-meta">
+    <time class="updated" datetime="2016-04-22T00:00:00.000Z" itemprop="dateModified">Friday, Apr 22nd, 2016</time>
+    in <span class="entry-tags">
+      
+      <a href="../tag/shell/">#shell</a>
+      
+    </span>
+  </div><div class="ds-thread" data-thread-key="117d0f544697f5f0d408eb6fb0cd6623" data-title="在 Bash 中解析命令行参数"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"tanshuai"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+</div>
+</section>
+      <footer>
+ <small>theme <a href='https://github.com/7anshuai/nico-minimal'>nico-minimal</a></small>
+        <p class="copyright"><small>powered by <a href="http://lab.lepture.com/nico/">nico</a> 0.5.2</small></p>
+      </footer>
+    </div>
+    <script src="../static/script.js"></script>
+  </body>
+</html>
