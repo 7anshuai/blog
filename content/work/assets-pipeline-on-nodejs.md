@@ -133,8 +133,6 @@ connect-assets 提供了三个名为 `js`，`css`, `assetPath` 的全局函数�
 
 如果你想包含整个文件夹的脚本，使用 `//= require_tree dir` 代替 `//= require file`。
 
-一个使用 connect-assets 的 Node.js App [Node starter](http://node.tanshuai.me/)，fork from [Hackathon Starter](https://github.com/sahat/hackathon-starter)。
-
 扩展阅读：
 
 - [Optimize caching](http://code.google.com/speed/page-speed/docs/caching.html)
@@ -143,4 +141,3 @@ connect-assets 提供了三个名为 `js`，`css`, `assetPath` 的全局函数�
 周末福利:
 
 豆瓣女神，独立音乐人，北大美女才女 － 程璧的官方主页 [Anna's Patio](http://www.annapatio.com/) 是基于 Ruby on Rails，真心很赞啊！
-
