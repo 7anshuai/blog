@@ -16,7 +16,7 @@
 |  |  requirejs optimizer (r.js)
 |  |-- inliner
 |  |  Node utility to inline images, CSS and JavaScript for a web page
-|--publics
+|--public
 |  静态文件（css，js，images等）
 |-- package.json
 |  npm 项目配置
@@ -38,7 +38,7 @@
 }
 ```
 
-OK，页面开发完后运行相应的命令 `npm run build`，`npm run inliner` 之后，再将生成好的单一 HTML 文件（www/index.html）scp 到硬件设备的文件 www 目录下。那么问题来了，调试过程中需要频繁的重复这一过程，而且硬件设备的局域网 IP 地址也会动态变化，我需要个一键部署的 shell 脚本，比如这样：
+OK，页面开发完后运行相应的命令 `npm run build`，`npm run inliner` 之后，再将生成好的单一 HTML 文件（www/index.html）scp 到硬件设备的文件 www 目录下。那么问题来了，调试过程中需要频繁的重复这一过程，而且硬件设备的局域网 IP 地址也常会发生变化，我需要个一键部署的 shell 脚本，比如这样：
 ```
 ./publish --user root --host 192.168.1.99
 ```
@@ -132,7 +132,7 @@ if [[ -n $1 ]]; then
 fi
 ```
 
-To better understand `${i#*=}` search for "Substring Removal" in [this guide](http://tldp.org/LDP/abs/html/string-manipulation.html). It is functionally equivalent to `sed 's/[^=]*=//' <<< "$i"` which calls a needless subprocess or `echo "$i" | sed 's/[^=]*=//'` which calls two needless subprocesses.
+为了更好的理解 `${i#*=}` 可在[这篇指南](http://tldp.org/LDP/abs/html/string-manipulation.html)中查找 "Substring Removal"。它的功能等同于 `sed 's/[^=]*=//' <<< "$i"`（调用了一个不必要的子进程）或者 `echo "$i" | sed 's/[^=]*=//'`（调用了两个不必要的子进程）。
 
 参考链接：
 - [A quick guide to writing scripts using the bash shell](http://www.panix.com/~elflord/unix/bash-tute.html)
