@@ -49,7 +49,7 @@
 |  |  requirejs optimizer (r.js)
 |  |-- inliner
 |  |  Node utility to inline images, CSS and JavaScript for a web page
-|--publics
+|--public
 |  静态文件（css，js，images等）
 |-- package.json
 |  npm 项目配置
@@ -63,7 +63,7 @@
     <span class="string">"test"</span>: <span class="string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span>
   },
   ...
-}</code></pre></div><p>OK，页面开发完后运行相应的命令 <code>npm run build</code>，<code>npm run inliner</code> 之后，再将生成好的单一 HTML 文件（www/index.html）scp 到硬件设备的文件 www 目录下。那么问题来了，调试过程中需要频繁的重复这一过程，而且硬件设备的局域网 IP 地址也会动态变化，我需要个一键部署的 shell 脚本，比如这样：</p>
+}</code></pre></div><p>OK，页面开发完后运行相应的命令 <code>npm run build</code>，<code>npm run inliner</code> 之后，再将生成好的单一 HTML 文件（www/index.html）scp 到硬件设备的文件 www 目录下。那么问题来了，调试过程中需要频繁的重复这一过程，而且硬件设备的局域网 IP 地址也常会发生变化，我需要个一键部署的 shell 脚本，比如这样：</p>
 <pre>./publish --user root --host 192.168.1.99</pre><h2 id="bash-script">Bash script</h2><p>如何编写一个能接受命令行参数的 Bash 脚本？在 stackoverflow 上找到大家推荐的方法：使用没有 getopt[s] 的 straight bash。</p>
 <h3 id="空格分离的-straight-bash">空格分离的 Straight Bash</h3><p>使用方法：<code>./myscript.sh -e conf -s /etc -l /usr/lib /etc/hosts</code></p>
 <div class="highlight"><pre><code class="bash"><span class="shebang">#!/bin/bash</span>
@@ -140,7 +140,7 @@ shift <span class="comment"># past argument or value</span>
 <span class="keyword">if</span> [[ -n <span class="variable">$1</span> ]]; <span class="keyword">then</span>
     <span class="built_in">echo</span> <span class="string">"Last line of file specified as non-opt/last argument:"</span>
     tail -<span class="number">1</span> <span class="variable">$1</span>
-<span class="keyword">fi</span></code></pre></div><p>To better understand <code>${i#*=}</code> search for &quot;Substring Removal&quot; in <a href="http://tldp.org/LDP/abs/html/string-manipulation.html">this guide</a>. It is functionally equivalent to <code>sed &#39;s/[^=]*=//&#39; &lt;&lt;&lt; &quot;$i&quot;</code> which calls a needless subprocess or <code>echo &quot;$i&quot; | sed &#39;s/[^=]*=//&#39;</code> which calls two needless subprocesses.</p>
+<span class="keyword">fi</span></code></pre></div><p>为了更好的理解 <code>${i#*=}</code> 可在<a href="http://tldp.org/LDP/abs/html/string-manipulation.html">这篇指南</a>中查找 &quot;Substring Removal&quot;。它的功能等同于 <code>sed &#39;s/[^=]*=//&#39; &lt;&lt;&lt; &quot;$i&quot;</code>（调用了一个不必要的子进程）或者 <code>echo &quot;$i&quot; | sed &#39;s/[^=]*=//&#39;</code>（调用了两个不必要的子进程）。</p>
 <p>参考链接：</p>
 <ul>
 <li><a href="http://www.panix.com/~elflord/unix/bash-tute.html">A quick guide to writing scripts using the bash shell</a></li>

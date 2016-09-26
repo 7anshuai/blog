@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="generator" content="nico 0.5.2">
+    <meta name="theme" content="minimal 0.1">
+    <title>通过 Nginx 给本地应用取个漂亮域名</title>
+    <link rel="shortcut icon" href="http://7anshuai.js.org/favicon.ico" />
+    <link rel="apple-touch-icon" href="http://7anshuai.js.org/apple-touch-icon.png" />
+    <link rel="stylesheet" href="../static/style.css" />
+    <link rel="stylesheet" href="../static/syntax.css" />
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-59443769-1']);
+      _gaq.push(['_trackPageview']);
+      _gaq.push(['_trackPageLoadTime']);
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = 'https://ssl.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <a href="../"><h1>tanshuai.blog()</h1></a>
+        <nav class="menu" role="navigation">
+          <p class="view">
+            <a href="./">work</a>
+          </p>
+          <p class="view">
+            <a href="../life/">life of shuai</a>
+          </p>
+          <p class="view">
+            <a href="../feed.xml">feed</a>
+          </p>
+        </nav>
+      </header>
+      <section>
+<div class="hentry" itemscope itemtype="http://schema.org/Article">
+  <h1 class="entry-title" itemprop="name">通过 Nginx 给本地应用取个漂亮域名</h1>
+  <div class="entry-content" itemprop="articleBody"><p>简单记录下之前看到并实践的一篇文章 <a href="http://zaiste.net/2013/03/serving_apps_locally_with_nginx_and_pretty_domains/">Serving Apps Locally with Nginx and Pretty Domains</a>。在 Mac OS X 上通过配置 Nginx 实现本地应用可以通过漂亮的域名来访问，比如 <code>http://anapp.dev/</code>。类似的解决方案有 <a href="http://pow.cx">pow</a> - Mac OS X 上的零配置 Rake Server。</p>
+<h2 id="nginx">Nginx</h2><p>首先需要关掉 Apache 进程（Mac OS X 上默认启动 Apache 监听 <code>80</code> 端口）：</p>
+<div class="highlight"><pre><code class="bash"><span class="built_in">sudo</span> launchctl unload -w /System/Library/LaunchDaemons/org.apache.httpd.plist</code></pre></div><p>使用 Homebrew 安装 Nginx ：</p>
+<div class="highlight"><pre><code class="bash">brew install nginx</code></pre></div><p>Nginx 监听 <code>80</code>（或任何小于 <code>1024</code> 的）端口需要使用 <code>sudo</code> 命令，否则会启动失败。对于大于 <code>1024</code> 的端口，如下直接为启动脚本建立一个符号链接：</p>
+<div class="highlight"><pre><code class="bash">ln -sfv /usr/local/opt/nginx/*.plist ~/Library/LaunchAgents
+launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.nginx.plist</code></pre></div><p>对于 HTTP 默认端口，需要在 <code>/usr/local/etc/nginx.conf</code> 中将 <code>listen</code> 的值从 <code>8080</code> 修改为 <code>80</code>。</p>
+<pre>server {
+     …
+     listen 80;
+     server_name localhost;
+     …
+}</pre><p>小于 <code>1024</code> 的端口不能为启动脚本建立符号链接，必须将脚本拷贝到 <code>/Library/LaunchAgents</code>。</p>
+<div class="highlight"><pre><code class="bash"><span class="built_in">sudo</span> cp /usr/local/opt/nginx/homebrew.mxcl.nginx.plist /Library/LaunchAgents</code></pre></div><p>在 <code>homebrew.mxcl.nginx.plist</code> 中，需要将 <code>UserName</code> 项修改为 <code>root</code>。为了方便，还可以将 <code>Label</code> 项修改为 <code>nginx</code>，这样就可以使用</p>
+<div class="highlight"><pre><code class="bash">launchctl start nginx</code></pre></div><p>代替</p>
+<div class="highlight"><pre><code class="bash">launchctl start homebrew.mxcl.nginx</code></pre></div><h2 id="本地-dns">本地 DNS</h2><p>接下来是设置一个本地的 DNS。因为不能在 <code>/etc/hosts</code> 文件中使用通配符，无法实现类似功能：</p>
+<pre>127.0.0.1      *.dev.</pre><p>为了解决这个问题，需要安装一个叫做 <a href="http://www.thekelleys.org.uk/dnsmasq/doc.html">DNSMasq</a> 的 DNS 代理：</p>
+<div class="highlight"><pre><code class="bash">brew install dnsmasq</code></pre></div><p>配置文件存储在 <code>/usr/local/etc/</code> 下的 <code>dnsmasq.conf</code> ：</p>
+<div class="highlight"><pre><code class="bash">touch /usr/local/etc/dnsmasq.conf</code></pre></div><p>在文件中写入：</p>
+<pre>address=/.dev/127.0.0.1</pre><p>这样所有 <code>*.dev</code> 的站点会被重定向到本地 IP，即 <code>127.0.0.1</code>。
+类似 Nginx 进程，<code>dnsmasq</code> 需要 <code>root</code> 权限：</p>
+<div class="highlight"><pre><code class="bash"><span class="built_in">sudo</span> cp -fv /usr/local/opt/dnsmasq/*.plist /Library/LaunchDaemons
+<span class="built_in">sudo</span> launchctl load /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist</code></pre></div><p>然后，需要配置 OSX 使用本地系统作为首要 DNS 服务器。进入系统设置 -&gt; 网络，在 DNS 配置中将回环 IP (即 <code>127.0.0.1</code>)作为第一行，然后是惯例的 DNS IP：</p>
+<pre>127.0.0.1
+8.8.8.8
+8.8.4.4</pre><p>现在，试着 <code>ping</code> 任何以 <code>.dev</code> 结尾的地址，应该返回的 IP 地址是 <code>127.0.0.1</code>：</p>
+<div class="highlight"><pre><code class="bash">$ ping example.dev 
+PING example.dev (<span class="number">127.0</span>.<span class="number">0.1</span>): <span class="number">56</span> data bytes</code></pre></div><h2 id="虚拟主机">虚拟主机</h2><p>关于虚拟主机配置，按照惯例在 <code>/usr/local/etc/nginx/</code> 下创建两个目录 <code>sites-enabled</code> 和 <code>sites-available</code>：</p>
+<div class="highlight"><pre><code class="bash"><span class="built_in">cd</span> /usr/local/etc/nginx
+mkdir sites-available
+mkdir sites-enabled</code></pre></div><p>在 <code>nginx.conf</code> 中的 <code>http</code> 部分，需要加入以下行：</p>
+<pre>include sites-enabled/*.dev;</pre><h3 id="后端参与的项目配置">后端参与的项目配置</h3><p>现在可以指定每一个 app 的配置了。看一下配置模板文件：</p>
+<pre>upstream NAME {
+    server 127.0.0.1:3000;
+}
+
+server {
+    listen 80;
+    server_name NAME.dev;
+    root PATH_TO_PUBLIC;
+
+    try_files $uri/index.html $uri.html $uri @app;
+
+    location @app {
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $http_host;
+      proxy_redirect off;
+
+      proxy_pass http://NAME;
+    }
+}</pre><p>为了使它工作起来，至少需要修改两个地方，即 <code>NAME</code> 和 <code>PATH_TO_PUBLIC</code>。 <code>NAME</code> 可以是应用程序名称。 <code>PATH_TO_PUBLIC</code> 则指定项目静态资源目录，例如在 Express 中的路径为 <code>public</code>。
+配置文件需要放在 <code>sites-available</code> 下，然后需要链接到 <code>sites-enabled</code>，例如：</p>
+<div class="highlight"><pre><code class="bash">ln <span class="operator">-s</span> /usr/local/etc/nginx/sites-available/anapp.dev \
+  /usr/local/etc/nginx/sites-enabled/anapp.dev</code></pre></div><p>建立链接后，需要重启 Nginx：</p>
+<div class="highlight"><pre><code class="bash"><span class="built_in">sudo</span> launchctl stop nginx
+<span class="built_in">sudo</span> launchctl start nginx</code></pre></div><h3 id="无后端参与的项目配置">无后端参与的项目配置</h3><p>以上的配置文件对于纯静态的项目来说是不必要的。可以通过位于 <code>/usr/local/etc/nginx/nginx.conf</code> 中默认的 <code>server</code> 指令设置一个动态的应用程序分发。Nginx 会在定义的基础路径中查找匹配被请求的域名目录。如在以下例子中， <code>appname.dev</code> 会匹配 <code>/Users/zaiste/dev</code> 下一个叫做 <code>appname</code> 的目录：</p>
+<pre>server {
+    listen       80;
+    server_name  app localhost .dev;
+
+    set $basepath &quot;/Users/zaiste/dev&quot;;
+
+    set $domain $host;
+    if ($domain ~ &quot;^(.*)\.dev$&quot;) {
+        set $domain $1;
+    }
+    set $rootpath &quot;${domain}&quot;;
+    if (-d $basepath/$domain/public) {
+        set $rootpath &quot;${domain}/public&quot;;
+    }
+    if (-f $basepath/$domain/index.html) {
+        set $rootpath $domain;
+    }
+
+    root $basepath/$rootpath;
+
+    # redirect server error pages to the static page /50x.html
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   html;
+    }
+}</pre><p>现在，只需要在 <code>/Users/zaiste/dev</code> 创建一个新的目录及相应的 HTML 文件，剩下的事情就交给 Nginx 了。</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="http://zaiste.net/2013/03/serving_apps_locally_with_nginx_and_pretty_domains/">Serving Apps Locally with Nginx and Pretty Domains</a></li>
+</ul>
+</div>
+
+  <div class="entry-meta">
+    <time class="updated" datetime="2016-09-19T00:00:00.000Z" itemprop="dateModified">Monday, Sep 19th, 2016</time>
+    in <span class="entry-tags">
+      
+      <a href="../tag/nginx/">#nginx</a>
+      
+      <a href="../tag/shell/">#shell</a>
+      
+    </span>
+  </div><div class="ds-thread" data-thread-key="148d4236305583f5496a7bcf903ecfd8" data-title="通过 Nginx 给本地应用取个漂亮域名"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"tanshuai"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+</div>
+</section>
+      <footer>
+ <small>theme <a href='https://github.com/7anshuai/nico-minimal'>nico-minimal</a></small>
+        <p class="copyright"><small>powered by <a href="http://lab.lepture.com/nico/">nico</a> 0.5.2</small></p>
+      </footer>
+    </div>
+    <script src="../static/script.js"></script>
+  </body>
+</html>
