@@ -1,7 +1,7 @@
 # 在 Bash 中解析命令行参数
 
 - pubdate: 2016-04-22
-- tags: shell
+- tags: bash, shell
 
 -------
 

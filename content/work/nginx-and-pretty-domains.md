@@ -1,4 +1,5 @@
 # 通过 Nginx 给本地应用取个漂亮域名
+
 - pubdate: 2016-09-19
 - tags: nginx, shell
 
@@ -86,7 +87,7 @@ sudo launchctl load /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist
 
 现在，试着 `ping` 任何以 `.dev` 结尾的地址，应该返回的 IP 地址是 `127.0.0.1`：
 ```bash
-$ ping example.dev 
+$ ping example.dev
 PING example.dev (127.0.0.1): 56 data bytes
 ```
 
