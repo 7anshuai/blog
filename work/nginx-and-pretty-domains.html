@@ -66,7 +66,7 @@ launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.nginx.plist</code></pre><
 <pre>127.0.0.1
 8.8.8.8
 8.8.4.4</pre><p>现在，试着 <code>ping</code> 任何以 <code>.dev</code> 结尾的地址，应该返回的 IP 地址是 <code>127.0.0.1</code>：</p>
-<div class="highlight"><pre><code class="bash">$ ping example.dev 
+<div class="highlight"><pre><code class="bash">$ ping example.dev
 PING example.dev (<span class="number">127.0</span>.<span class="number">0.1</span>): <span class="number">56</span> data bytes</code></pre></div><h2 id="虚拟主机">虚拟主机</h2><p>关于虚拟主机配置，按照惯例在 <code>/usr/local/etc/nginx/</code> 下创建两个目录 <code>sites-enabled</code> 和 <code>sites-available</code>：</p>
 <div class="highlight"><pre><code class="bash"><span class="built_in">cd</span> /usr/local/etc/nginx
 mkdir sites-available
