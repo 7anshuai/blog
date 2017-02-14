@@ -1,4 +1,4 @@
-# 在 Chrome DevTools 中并行调试 Node.js 和 浏览器 JavaScript
+# 在 Chrome DevTools 中并行调试 Node.js 和浏览器 JavaScript
 
 - pubdate: 2017-02-09
 - tags: node.js, devtools
@@ -140,6 +140,8 @@ node --inspect server.js
 ![Node.js debugging](http://wx3.sinaimg.cn/mw690/6b4c087fgy1fcoxlafw3fj20zk0yyaha.jpg)
 
 如果您的 Node.js 应用有 console.log 或类似输出，您会看到，它们已经出现在 Chrome DevTools console。然后，你可以同时给浏览器和 Node.js 文件设置断点进行 debug。
+
+![Node.js Debugging Gif](http://wx3.sinaimg.cn/mw1024/6b4c087fgy1fcq2n9u9rtg20gn0aenpd.gif)
 
 ## 总结
 

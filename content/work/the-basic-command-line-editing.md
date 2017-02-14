@@ -5,7 +5,7 @@
 
 ------
 
-GNU Bash shell 提供了 [Command line editing](https://www.gnu.org/software/bash/manual/html_node/Command-Line-Editing.html) 功能，它是由 [Readline library](http://tiswww.case.edu/php/chet/readline/rltop.html) 实现的。Python 交互式命令行和 node.js REPL等程序都实现了类似的命令行编辑功能。Command line editing 支持 Emacs-style 和 Vi-style 的命令风格，默认的是 Emacs-style。
+GNU Bash shell 提供了 [Command line editing](https://www.gnu.org/software/bash/manual/html_node/Command-Line-Editing.html) 功能，它是由 [Readline library](http://tiswww.case.edu/php/chet/readline/rltop.html) 实现的。Python 交互式命令行和 Node.js REPL等程序都实现了类似的命令行编辑功能。Command line editing 支持 Emacs-style 和 Vi-style 的命令风格，默认的是 Emacs-style。
 
 ## 命令行编辑
 
