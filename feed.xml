@@ -5,7 +5,7 @@
     <link href="http://7anshuai.js.org/blog/" />
     <id>http://7anshuai.js.org/blog/feed.xml</id>
     <entry>
-        <title type="html"><![CDATA[在 Chrome DevTools 中并行调试 Node.js 和 浏览器 JavaScript]]></title>
+        <title type="html"><![CDATA[在 Chrome DevTools 中并行调试 Node.js 和浏览器 JavaScript]]></title>
         <link href="http://7anshuai.js.org/blog/work/nodejs-debugging-with-chrome-devtools.html"/>
         <published>2017-02-09T00:00:00.000Z</published>
         <updated>2017-02-09T00:00:00.000Z</updated>
@@ -82,6 +82,7 @@ To start debugging, open the following URL <span class="keyword">in</span> Chrom
 <pre>node --inspect server.js</pre><p>像平时一样在 Chrome 打开您的页面和 DevTools，选择 Sources -&gt; 按 <code>ESC</code> 开启 Console -&gt; 在 debugger 面板中点击 connect 连接 <code>NodeJS Main Context</code>：
 <img src="http://wx3.sinaimg.cn/mw690/6b4c087fgy1fcoxlafw3fj20zk0yyaha.jpg" alt="Node.js debugging"></p>
 <p>如果您的 Node.js 应用有 console.log 或类似输出，您会看到，它们已经出现在 Chrome DevTools console。然后，你可以同时给浏览器和 Node.js 文件设置断点进行 debug。</p>
+<p><img src="http://wx3.sinaimg.cn/mw1024/6b4c087fgy1fcq2n9u9rtg20gn0aenpd.gif" alt="Node.js Debugging Gif"></p>
 <h2 id="总结">总结</h2><p>如果您的项目使用 Node.js，现在您可以从一个地方调试和更改所有 JavaScript - Chrome DevTools。</p>
 <p>您还可以将 Chrome DevTools 的所有强大功能应用于 Node.js 代码。</p>
 <h2 id="参考链接">参考链接</h2><ul>
@@ -662,7 +663,7 @@ release-major: build test
         <updated>2015-01-26T14:46:54.000Z</updated>
         <id>http://7anshuai.js.org/blog/work/the-basic-command-line-editing.html</id>
         <content type="html" xml:base="http://7anshuai.js.org/blog/" xml:lang="en">
-            <![CDATA[ <p>GNU Bash shell 提供了 <a href="https://www.gnu.org/software/bash/manual/html_node/Command-Line-Editing.html">Command line editing</a> 功能，它是由 <a href="http://tiswww.case.edu/php/chet/readline/rltop.html">Readline library</a> 实现的。Python 交互式命令行和 node.js REPL等程序都实现了类似的命令行编辑功能。Command line editing 支持 Emacs-style 和 Vi-style 的命令风格，默认的是 Emacs-style。</p>
+            <![CDATA[ <p>GNU Bash shell 提供了 <a href="https://www.gnu.org/software/bash/manual/html_node/Command-Line-Editing.html">Command line editing</a> 功能，它是由 <a href="http://tiswww.case.edu/php/chet/readline/rltop.html">Readline library</a> 实现的。Python 交互式命令行和 Node.js REPL等程序都实现了类似的命令行编辑功能。Command line editing 支持 Emacs-style 和 Vi-style 的命令风格，默认的是 Emacs-style。</p>
 <h2 id="命令行编辑">命令行编辑</h2><p>基本上，Unix/Linux 系统默认就支持 Command line editing，所以打开终端，或者在终端运行 Python interactive 或者 Node REPL，都可以马上使用常规的 Emacs 的控制字符集 <code>Control-*</code> 了。</p>
 <ul>
 <li><code>C-a</code> （Control-a）移动光标到行首</li>
