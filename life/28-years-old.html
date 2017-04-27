@@ -49,16 +49,49 @@
 
   <div class="entry-meta">
     <time class="updated" datetime="2015-04-06T00:00:00.000Z" itemprop="dateModified">Monday, Apr 6th, 2015</time>
-  </div><div class="ds-thread" data-thread-key="70ad875620f80bc6571afcc70b926315" data-title="28 年华"></div>
+  </div><div style="margin-top: 20px;" class="gh-comments" data-comment-id="" data-title="28 年华"></div>
 <script type="text/javascript">
-  var duoshuoQuery = {short_name:"tanshuai"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = 'http://static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0]
-     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  (function (){
+    if (!'') return false;
+    var gh_comments = document.getElementsByClassName('gh-comments')[0];
+    var a = document.createElement('a');
+    a.href = 'https://github.com/7anshuai/blog/issues';
+    var gh_api = 'https://api.github.com/repos' + a.pathname;
+    var gh_issue_id = '';
+    var gh_issue_url = a.href +  '/' + gh_issue_id;
+    var gh_comments_url = gh_api + '/' + gh_issue_id + '/comments';
+    fetch(gh_comments_url, {
+      headers: new Headers({
+        'Accept': 'application/vnd.github.v3.html+json',
+        'Content-Type': 'application/json'
+      }),
+      method: 'GET'
+    }).then((res) => {
+      if (res.status == 200) return res.json();
+      let error = new Error('HTTP Exception[GET]');
+      error.status = res.status;
+      error.statusText = res.statusText;
+      error.url = res.url;
+      throw error;
+    }).then((json) => {
+        gh_comments.insertAdjacentHTML('afterbegin', `<h3>GitHub Comments</h3>
+          <p>如有需要，请访问 <a href="${gh_issue_url}">GitHub Issue</a> 对文章进行评论。</p>`);
+        for (let comment of json) {
+          let date = new Date(comment.created_at);
+          let c = '<div class="gh-comment">' +
+              `<img src="${comment.user.avatar_url}" width="24px"> ` +
+              `<a href="${comment.user.html_url}">${comment.user.login}</a>` +
+              ' posted at ' +
+              `<time>${date.toUTCString()}</time>` +
+              '<hr>' +
+              comment.body_html +
+              '</div>';
+          gh_comments.insertAdjacentHTML('beforeend', c);
+        }
+    }).catch((err) => {
+      gh_comments.insertAdjacentHTML('afterbegin', `<h3>GitHub Comments</h3>
+        <p>获取 GitHub 评论出错，或者还没有评论</p>`);
+    })
   })();
 </script>
 </div>
@@ -68,6 +101,7 @@
         <p class="copyright"><small>powered by <a href="http://lab.lepture.com/nico/">nico</a> 0.5.2</small></p>
       </footer>
     </div>
+    <script src="https://github.com/themes/minimal/javascripts/scale.fix.js"></script>
     <script src="../static/script.js"></script>
   </body>
 </html>

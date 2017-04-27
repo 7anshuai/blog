@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="generator" content="nico 0.5.2">
+    <meta name="theme" content="minimal 0.1">
+    <title>使用 GitHub Comments 替换多说评论</title>
+    <link rel="shortcut icon" href="http://7anshuai.js.org/favicon.ico" />
+    <link rel="apple-touch-icon" href="http://7anshuai.js.org/apple-touch-icon.png" />
+    <link rel="stylesheet" href="../static/style.css" />
+    <link rel="stylesheet" href="../static/syntax.css" />
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-59443769-1']);
+      _gaq.push(['_trackPageview']);
+      _gaq.push(['_trackPageLoadTime']);
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = 'https://ssl.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <a href="../"><h1>tanshuai.blog()</h1></a>
+        <nav class="menu" role="navigation">
+          <p class="view">
+            <a href="./">work</a>
+          </p>
+          <p class="view">
+            <a href="../life/">life of shuai</a>
+          </p>
+          <p class="view">
+            <a href="../feed.xml">feed</a>
+          </p>
+        </nav>
+      </header>
+      <section>
+<div class="hentry" itemscope itemtype="http://schema.org/Article">
+  <h1 class="entry-title" itemprop="name">使用 GitHub Comments 替换多说评论</h1>
+  <div class="entry-content" itemprop="articleBody"><p>最近多说评论要关闭了，放在 GitHub Pages 上的静态博客需要新的评论功能了。之前有想法使用 <a href="https://developer.github.com/v3/issues/">GitHub Issues API</a> 来实现一个评论系统，目前 GitHub 已经有<a href="https://github.com/imsun/gitment">类似实现</a>了，有兴趣的可以尝试一下。</p>
+<h2 id="github-comments">GitHub Comments</h2><p>在看到一篇 <a href="http://donw.io/post/github-comments/">Replacing Disqus with GitHub Comments</a> 文章之后，觉得这个思路更是简单可行。于是动手给博客主题加了一个 GitHub Comments：</p>
+<ol>
+<li>首先在博客的 GitHub repo 上为文章创建一个 issue，比如为这篇文章创建的一个 <a href="https://github.com/7anshuai/blog/issues/1">issue</a></li>
+<li>所以的评论都是在 issue 里面发布</li>
+<li>在博客的文章页面添加一些 JavaScript 代码通过 GitHub API 获取到指定 issue 的所有评论并展示</li>
+</ol>
+<p>好处是显而易见的：</p>
+<ul>
+<li>可以使用 <a href="http://daringfireball.net/projects/markdown/">Markdown</a> 进行评论，支持插入代码，图片，列表等等</li>
+<li>可以使用 GitHub 消息通知来及时回复评论</li>
+<li>对于访问博客的读者来说，几乎没有任何追踪代码了</li>
+<li>可以过滤一部分垃圾评论</li>
+</ul>
+<p>最重要的是你不需要申请任何 API 权限去读取 GitHub JSON 数据，它是完全开放的。这篇文章的评论的数据可以在<a href="https://api.github.com/repos/7anshuai/blog/issues/1/comments">这里</a>获取到。
+第一条评论是这样的：</p>
+<div class="highlight"><pre><code class="javascript">{
+    <span class="string">"body"</span>: <span class="string">"Inspired by http://donw.io/post/github-comments/."</span>,
+    <span class="string">"created_at"</span>: <span class="string">"2017-04-27T03:12:41Z"</span>,
+    <span class="string">"html_url"</span>: <span class="string">"https://github.com/7anshuai/blog/issues/1#issuecomment-297599593"</span>,
+    <span class="string">"id"</span>: <span class="number">297599593</span>,
+    <span class="string">"issue_url"</span>: <span class="string">"https://api.github.com/repos/7anshuai/blog/issues/1"</span>,
+    <span class="string">"updated_at"</span>: <span class="string">"2017-04-27T03:12:41Z"</span>,
+    <span class="string">"url"</span>: <span class="string">"https://api.github.com/repos/7anshuai/blog/issues/comments/297599593"</span>,
+    <span class="string">"user"</span>: {
+        <span class="string">"avatar_url"</span>: <span class="string">"https://avatars0.githubusercontent.com/u/9865150?v=3"</span>,
+        <span class="string">"events_url"</span>: <span class="string">"https://api.github.com/users/7anshuai/events{/privacy}"</span>,
+        <span class="string">"followers_url"</span>: <span class="string">"https://api.github.com/users/7anshuai/followers"</span>,
+        <span class="string">"following_url"</span>: <span class="string">"https://api.github.com/users/7anshuai/following{/other_user}"</span>,
+        <span class="string">"gists_url"</span>: <span class="string">"https://api.github.com/users/7anshuai/gists{/gist_id}"</span>,
+        <span class="string">"gravatar_id"</span>: <span class="string">""</span>,
+        <span class="string">"html_url"</span>: <span class="string">"https://github.com/7anshuai"</span>,
+        <span class="string">"id"</span>: <span class="number">9865150</span>,
+        <span class="string">"login"</span>: <span class="string">"7anshuai"</span>,
+        <span class="string">"organizations_url"</span>: <span class="string">"https://api.github.com/users/7anshuai/orgs"</span>,
+        <span class="string">"received_events_url"</span>: <span class="string">"https://api.github.com/users/7anshuai/received_events"</span>,
+        <span class="string">"repos_url"</span>: <span class="string">"https://api.github.com/users/7anshuai/repos"</span>,
+        <span class="string">"site_admin"</span>: <span class="literal">false</span>,
+        <span class="string">"starred_url"</span>: <span class="string">"https://api.github.com/users/7anshuai/starred{/owner}{/repo}"</span>,
+        <span class="string">"subscriptions_url"</span>: <span class="string">"https://api.github.com/users/7anshuai/subscriptions"</span>,
+        <span class="string">"type"</span>: <span class="string">"User"</span>,
+        <span class="string">"url"</span>: <span class="string">"https://api.github.com/users/7anshuai"</span>
+    }
+}</code></pre></div><h2 id="代码">代码</h2><p>我的博客使用 <a href="https://github.com/lepture/nico">Nico</a> 来生成静态文件。不管你使用什么静态文件生成器，都只需给使用的主题添加一个简单的 <code>comments.html</code>，我的看起来是这样:</p>
+<div class="highlight"><pre><code class="xml"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"gh-comments"</span> <span class="attribute">data-comment-id</span>=<span class="value">"{{post.gh_issue_id}}"</span> <span class="attribute">data-title</span>=<span class="value">"{{ post.title }}"</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+<span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript">
+  (<span class="function"><span class="keyword">function</span> <span class="params">()</span>{</span>
+    <span class="keyword">if</span> (!<span class="string">'{{post.gh_issue_id}}'</span>) <span class="keyword">return</span> <span class="literal">false</span>;
+    <span class="keyword">var</span> gh_comments = document.getElementsByClassName(<span class="string">'gh-comments'</span>)[<span class="number">0</span>];
+    <span class="keyword">var</span> a = document.createElement(<span class="string">'a'</span>);
+    a.href = <span class="string">'{{config.github_issues}}'</span>;
+    <span class="keyword">var</span> gh_api = <span class="string">'https://api.github.com/repos'</span> + a.pathname;
+    <span class="keyword">var</span> gh_issue_id = <span class="string">'{{post.gh_issue_id}}'</span>;
+    <span class="keyword">var</span> gh_issue_url = a.href +  <span class="string">'/'</span> + gh_issue_id;
+    <span class="keyword">var</span> gh_comments_url = gh_api + <span class="string">'/'</span> + gh_issue_id + <span class="string">'/comments'</span>;
+    fetch(gh_comments_url, {
+      headers: <span class="keyword">new</span> Headers({
+        <span class="string">'Accept'</span>: <span class="string">'application/vnd.github.v3.html+json'</span>,
+        <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span>
+      }),
+      method: <span class="string">'GET'</span>
+    }).then((res) =&gt; {
+      <span class="keyword">if</span> (res.status == <span class="number">200</span>) <span class="keyword">return</span> res.json();
+      <span class="keyword">let</span> error = <span class="keyword">new</span> Error(<span class="string">'HTTP Exception[GET]'</span>);
+      error.status = res.status;
+      error.statusText = res.statusText;
+      error.url = res.url;
+      <span class="keyword">throw</span> error;
+    }).then((json) =&gt; {
+        gh_comments.insertAdjacentHTML(<span class="string">'afterbegin'</span>, `&lt;h3&gt;GitHub Comments&lt;<span class="regexp">/h3&gt;
+          &lt;p&gt;Visit the &lt;a href="${gh_issue_url}"&gt;GitHub Issue&lt;/</span>a&gt; to comment on <span class="keyword">this</span> post.<span class="xml"><span class="tag">&lt;/<span class="title">p</span>&gt;</span>`);
+
+        for (let comment of json) {
+          let date = new Date(comment.created_at);
+          let c = '<span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"gh-comment"</span>&gt;</span>' +
+              `<span class="tag">&lt;<span class="title">img</span> <span class="attribute">src</span>=<span class="value">"${comment.user.avatar_url}"</span> <span class="attribute">width</span>=<span class="value">"24px"</span>&gt;</span> ` +
+              `<span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"${comment.user.html_url}"</span>&gt;</span>${comment.user.login}<span class="tag">&lt;/<span class="title">a</span>&gt;</span>` +
+              ' posted at ' +
+              `<span class="tag">&lt;<span class="title">time</span>&gt;</span>${date.toUTCString()}<span class="tag">&lt;/<span class="title">time</span>&gt;</span>` +
+              '<span class="tag">&lt;<span class="title">hr</span>&gt;</span>' +
+              comment.body_html +
+              '<span class="tag">&lt;/<span class="title">div</span>&gt;</span>';
+          gh_comments.insertAdjacentHTML('beforeend', c);
+        }
+    }).catch((err) =&gt; {
+      gh_comments.insertAdjacentHTML('afterbegin', `<span class="tag">&lt;<span class="title">h3</span>&gt;</span>GitHub Comments<span class="tag">&lt;/<span class="title">h3</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">p</span>&gt;</span>Comments are not open for this post yet<span class="tag">&lt;/<span class="title">p</span>&gt;</span>`);
+    });
+  })();
+</span></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></code></pre></div><p>其中：</p>
+<ul>
+<li><code>{{config.github_issues}}</code> - 在 nico.json 配置文件中添加的本博客 issues 地址</li>
+<li><code>{{post.gh_issue_id}}</code> - 在文章的 Markdown 文档中指定相应的 issue id</li>
+<li><code>{{post.title}}</code> - 文章的标题（并没有什么用）</li>
+</ul>
+<blockquote>
+<p>注意：如果你使用 nico， 默认是不支持读取 <code>post.gh_issue_id</code>，找到相应的 <a href="https://github.com/lepture/nico/blob/master/lib/sdk/post.js#L98">lib/sdk/post.js</a></p>
+<p>手动添加一行 <code>post.gh_issue_id = post.meta.gh_issue_id;</code></p>
+</blockquote>
+<p>在主题的 <code>post.html</code> 文件中将 <code>comments.html</code> 引入进来即可：</p>
+<div class="highlight"><pre><code class="xml">{%- if config.github_issues %}
+{%- include "_comments.html" %}
+{%- endif %}</code></pre></div><p>当你在 nico.json 配置好了博客 issues 地址，并在某篇文章指定了 issue id，就能成功组合一个该 issue 的 comments API url，获取到了数据展示在文章后面。</p>
+</div>
+
+  <div class="entry-meta">
+    <time class="updated" datetime="2017-04-27T00:00:00.000Z" itemprop="dateModified">Thursday, Apr 27th, 2017</time>
+    in <span class="entry-tags">
+      
+      <a href="../tag/node.js/">#node.js</a>
+      
+      <a href="../tag/nico/">#nico</a>
+      
+      <a href="../tag/gh-comments/">#gh-comments</a>
+      
+    </span>
+  </div><div style="margin-top: 20px;" class="gh-comments" data-comment-id="1" data-title="使用 GitHub Comments 替换多说评论"></div>
+<script type="text/javascript">
+  (function (){
+    if (!'1') return false;
+    var gh_comments = document.getElementsByClassName('gh-comments')[0];
+    var a = document.createElement('a');
+    a.href = 'https://github.com/7anshuai/blog/issues';
+    var gh_api = 'https://api.github.com/repos' + a.pathname;
+    var gh_issue_id = '1';
+    var gh_issue_url = a.href +  '/' + gh_issue_id;
+    var gh_comments_url = gh_api + '/' + gh_issue_id + '/comments';
+    fetch(gh_comments_url, {
+      headers: new Headers({
+        'Accept': 'application/vnd.github.v3.html+json',
+        'Content-Type': 'application/json'
+      }),
+      method: 'GET'
+    }).then((res) => {
+      if (res.status == 200) return res.json();
+      let error = new Error('HTTP Exception[GET]');
+      error.status = res.status;
+      error.statusText = res.statusText;
+      error.url = res.url;
+      throw error;
+    }).then((json) => {
+        gh_comments.insertAdjacentHTML('afterbegin', `<h3>GitHub Comments</h3>
+          <p>如有需要，请访问 <a href="${gh_issue_url}">GitHub Issue</a> 对文章进行评论。</p>`);
+        for (let comment of json) {
+          let date = new Date(comment.created_at);
+          let c = '<div class="gh-comment">' +
+              `<img src="${comment.user.avatar_url}" width="24px"> ` +
+              `<a href="${comment.user.html_url}">${comment.user.login}</a>` +
+              ' posted at ' +
+              `<time>${date.toUTCString()}</time>` +
+              '<hr>' +
+              comment.body_html +
+              '</div>';
+          gh_comments.insertAdjacentHTML('beforeend', c);
+        }
+    }).catch((err) => {
+      gh_comments.insertAdjacentHTML('afterbegin', `<h3>GitHub Comments</h3>
+        <p>获取 GitHub 评论出错，或者还没有评论</p>`);
+    })
+  })();
+</script>
+</div>
+</section>
+      <footer>
+ <small>theme <a href='https://github.com/7anshuai/nico-minimal'>nico-minimal</a></small>
+        <p class="copyright"><small>powered by <a href="http://lab.lepture.com/nico/">nico</a> 0.5.2</small></p>
+      </footer>
+    </div>
+    <script src="https://github.com/themes/minimal/javascripts/scale.fix.js"></script>
+    <script src="../static/script.js"></script>
+  </body>
+</html>
