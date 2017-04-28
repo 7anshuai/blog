@@ -6,7 +6,7 @@
     "siteurl": "http://7anshuai.js.org/blog/",
     "touchIcon": "http://7anshuai.js.org/apple-touch-icon.png",
     "favicon": "http://7anshuai.js.org/favicon.ico",
-    "duoshuo": "tanshuai",
+    "github_issues": "https://github.com/7anshuai/blog/issues",
     "google": "UA-59443769-1",
     "footer": "<small>theme <a href='https://github.com/7anshuai/nico-minimal'>nico-minimal</a></small>",
     "navigation": [
