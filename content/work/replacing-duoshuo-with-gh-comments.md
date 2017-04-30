@@ -13,7 +13,7 @@
 在看到一篇 [Replacing Disqus with GitHub Comments](http://donw.io/post/github-comments/) 文章之后，觉得这个思路更是简单可行。于是动手给博客主题加了一个 GitHub Comments：
 
 1. 首先在博客的 GitHub repo 上为文章创建一个 issue，比如为这篇文章创建的一个 [issue](https://github.com/7anshuai/blog/issues/1)
-2. 所以的评论都是在 issue 里面发布
+2. 所有的评论都是在 issue 里面发布
 3. 在博客的文章页面添加一些 JavaScript 代码通过 GitHub API 获取到指定 issue 的所有评论并展示
 
 好处是显而易见的：
@@ -129,3 +129,6 @@
 ```
 
 当你在 nico.json 配置好了博客 issues 地址，并在某篇文章指定了 issue id，就能成功组合一个该 issue 的 comments API url，获取到了数据展示在文章后面。
+
+参考链接：
+- [Replacing Disqus with GitHub Comments](http://donw.io/post/github-comments/)

@@ -5,6 +5,8 @@
 
 -------
 
+> 原文链接：[Makefile recipes for Node.js packages](https://andreypopp.com/posts/2013-05-16-makefile-recipes-for-node-js.html)
+
 当你编写 Node.js 代码时，在构建－测试－发布周期中肯定会有一些事情需要自动化。我使用 `make` 程序来完成这些任务，主要是因为它的简单明了。
 
 要开始使用 `make` 你需要在项目根目录创建一个 `Makefile`。`Makefile` 包含变量和任务声明（下面会给出例子）。要执行一些任务，你只需要在命令行执行 `make <task name>`。简单吧！
@@ -128,5 +130,3 @@ publish:
 现在发布一个新的次要版本只需要在命令行执行 `make release-minor publish` － `package.json` 中的次要版本会递增，新的 Git 提交和标记会被创建和推送到仓库，最后 Node.js 包也会被发布在 npm。
 
 完整的 `Makefile` 在 [这里](https://gist.github.com/5588256)。
-
-原文链接：[Makefile recipes for Node.js packages](https://andreypopp.com/posts/2013-05-16-makefile-recipes-for-node-js.html)

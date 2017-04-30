@@ -43,3 +43,6 @@ Meta-h: backward-kill-word
 "\C-u": universal-argument
 "\C-x\C-r": re-read-init-file
 ```
+
+参考链接：
+- [Interactive Input Editing and History Substitution](https://docs.python.org/2.7/tutorial/interactive.html)
