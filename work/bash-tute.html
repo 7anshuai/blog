@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="generator" content="nico 0.5.2">
     <meta name="theme" content="minimal 0.1">
-    <title>[译] 使用 bash shell 编写脚本的快速指南（翻译中...）</title>
+    <title>[译] 使用 bash shell 编写脚本的快速指南</title>
     <link rel="shortcut icon" href="http://7anshuai.js.org/favicon.ico" />
     <link rel="apple-touch-icon" href="http://7anshuai.js.org/apple-touch-icon.png" />
     <link rel="stylesheet" href="../static/style.css" />
@@ -40,7 +40,7 @@
       </header>
       <section>
 <div class="hentry" itemscope itemtype="http://schema.org/Article">
-  <h1 class="entry-title" itemprop="name">[译] 使用 bash shell 编写脚本的快速指南（翻译中...）</h1>
+  <h1 class="entry-title" itemprop="name">[译] 使用 bash shell 编写脚本的快速指南</h1>
   <div class="entry-content" itemprop="articleBody"><blockquote>
 <p>原文链接：<a href="http://www.panix.com/~elflord/unix/bash-tute.html">A quick guide to writing scripts using the bash shell</a></p>
 </blockquote>
@@ -55,9 +55,9 @@ ls  <span class="comment"># list files</span></code></pre></div><p>首先，请�
 <p>下面我们来继续讨论变量...</p>
 <h2 id="变量">变量</h2><p>任何编程语言都需要变量。如下定义一个变量：</p>
 <div class="highlight"><pre><code class="bash">X=<span class="string">"hello"</span></code></pre></div><p>然后引用它：</p>
-<div class="highlight"><pre><code class="bash"><span class="variable">$X</span></code></pre></div><p>更具体地说，<code>$X</code> 用于表示变量 <code>X</code> 的值。 关于语义的一些事情要注意：</p>
+<div class="highlight"><pre><code class="bash"><span class="variable">$X</span></code></pre></div><p>更具体地说，<code>$X</code> 用于表示变量 <code>X</code> 的值。 一些要注意的语义：</p>
 <ul>
-<li>如果你在 <code>=</code> 标志的两边留下空格，bash就会变得不快乐。 例如，以下内容提供了一个错误信息：<div class="highlight"><pre><code class="bash">X = hello</code></pre></div></li>
+<li>如果你在 <code>=</code> 标志的两边留下空格，bash就会变得不快乐。 例如，以下内容导致了一个错误：<div class="highlight"><pre><code class="bash">X = hello</code></pre></div></li>
 </ul>
 <ul>
 <li>虽然在我的例子中有引号，但并不总是必需的。 当变量的值包含空格时需要引号。 例如：<div class="highlight"><pre><code class="bash">X=hello world <span class="comment"># error</span>
@@ -73,13 +73,13 @@ X=<span class="string">"hello world"</span> <span class="comment"># OK</span></c
 <div class="highlight"><pre><code class="bash"><span class="variable">$USER</span>=elflord
 
 <span class="variable">$USER</span>=elflord</code></pre></div><p>双引号更灵活，但是可预测性较低。如果可以在两者之间选择的话，使用单引号。</p>
-<h3 id="使用引号括起变量">使用引号括起变量</h3><p>有时，使用双引号保护变量名是个好主意。 如果您的变量值（a）包含空格或（b）是空字符串，则这是很重要的。 一个例子如下：</p>
+<h3 id="使用引号括起变量">使用引号括起变量</h3><p>有时，使用双引号保护变量名是个好主意。 如果您的变量值包含空格或是空字符串，则这是很重要的。 一个例子如下：</p>
 <div class="highlight"><pre><code class="bash"><span class="shebang">#!/bin/bash</span>
 X=<span class="string">""</span>
 <span class="keyword">if</span> [ -n <span class="variable">$X</span> ]; <span class="keyword">then</span>  <span class="comment"># -n tests to see if the argument is non empty</span>
   <span class="built_in">echo</span> <span class="string">"the variable X is not the empty string"</span>
 <span class="keyword">fi</span></code></pre></div><p>这段脚本会输出：<code>the variable X is not the empty string</code>。
-因为 shell 将 <code>$X</code> 扩展为空字符串。 表达式 <code>[-n]</code> 返回 <code>true</code>（因为它没有提供参数）。 一个更好的脚本将是：</p>
+因为 shell 将 <code>$X</code> 展开为空字符串。 表达式 <code>[ -n ]</code> 返回 <code>true</code>（因为它没有提供参数）。 一个更好的脚本将是：</p>
 <div class="highlight"><pre><code class="bash"><span class="shebang">#!/bin/bash</span>
 X=<span class="string">""</span>
 <span class="keyword">if</span> [ -n <span class="string">"<span class="variable">$X</span>"</span> ]; <span class="keyword">then</span>  <span class="comment"># -n tests to see if the argument is non empty</span>
@@ -98,14 +98,13 @@ X=ABC
 <span class="built_in">echo</span> <span class="string">"<span class="variable">$Xabc</span>"</span></code></pre></div><p>这样没有得到输出。哪里出了错？答案是，shell 认为我们引用的是未初始化的变量 <code>Xabc</code>。处理这个问题的方法是把大括号放在 <code>X</code> 上以将其与其他字符分开。以下给出了期望的结果：</p>
 <div class="highlight"><pre><code class="bash"><span class="shebang">#!/bin/bash</span>
 X=ABC
-<span class="built_in">echo</span> <span class="string">"<span class="variable">${X}</span>abc"</span></code></pre></div><h2 id="条件语句">条件语句</h2><p>有时需要检查某些条件。一个字符串是否有0个长度？文件“foo”是否存在，它是一个符号链接还是一个真实的文件？首先，我们使用 <code>if</code> 命令来运行测试。 语法如下：</p>
+<span class="built_in">echo</span> <span class="string">"<span class="variable">${X}</span>abc"</span></code></pre></div><h2 id="条件语句">条件语句</h2><p>有时需要检查某些条件。一个字符串是否有0个长度？文件 “foo” 是否存在，它是一个符号链接还是一个真实的文件？首先，我们使用 <code>if</code> 命令来运行测试。 语法如下：</p>
 <pre>if condition
 then
   statement1
   statement2
   ..........
-fi</pre><p>有时您可能希望在条件失败时指定备用操作。这是如何做的：
-<a href="&lt;" title="The statements inside the block between if/elif and the next elif or fi are executed if the corresponding condition is true. Actually, any command can go in place of the conditions, and the block will be executed if and only if the command returns an exit status of 0 (in other words, if the command exits &quot;succesfully&quot; ). However, in the course of this document, we will be only interested in using &quot;test&quot; or &quot;[ ]&quot; to evaluate conditions.">//</a>: &lt;&gt; (Sometimes, you may wish to specify an alternate action when the condition fails. Here&#39;s how it&#39;s done.）</p>
+fi</pre><p>有时您可能希望在条件失败时指定备用操作。这是如何做的：</p>
 <pre>if condition
 then
   statement1
@@ -131,11 +130,9 @@ then
   ........    
 
 fi</pre><p>如果相应的条件为真，则 <code>if/elif</code> 和下一个 <code>elif</code> 或 <code>fi</code> 之间的块内的语句将被执行。 实际上，任何命令都可以替代条件，并且当且仅当命令返回退出状态为<code>0</code>（换句话说，如果命令退出“成功”），则该块将被执行。 但是，在本文档中，我们只会使用 <code>test</code> 或 <code>[ ]</code> 来测试条件。</p>
-<h2 id="the-test-command-and-operators">The Test Command and Operators</h2><p>The command used in conditionals nearly all the time is the test command. Test returns true or false (more accurately, exits with 0 or non zero status) depending respectively on whether the test is passed or failed. It works like this:
-test operand1 operator operand2
-for some tests, there need be only one operand (operand2) The test command is typically abbreviated in this form:
-[ operand1 operator operand2 ]
-To bring this discussion back down to earth, we give a few examples:</p>
+<h3 id="测试命令和操作符">测试命令和操作符</h3><p>几乎所有的条件语句使用的命令都是测试命令。 测试返回 <code>true</code> 或 <code>false</code>（更准确地说，退出 <code>0</code> 或非零状态），这取决于测试是通过还是失败。 它大概如下工作：</p>
+<pre>test operand1 operator operand2</pre><p>对于某些测试，只需要一个操作数（operand2）测试命令通常以下列形式缩写：</p>
+<pre>[ operand1 operator operand2 ]</pre><p>让讨论回到现实，我们举几个例子：</p>
 <div class="highlight"><pre><code class="bash"><span class="shebang">#!/bin/bash</span>
 X=<span class="number">3</span>
 Y=<span class="number">4</span>
@@ -158,21 +155,18 @@ empty_string=<span class="string">""</span>
   fi
 else
   echo "you have no .fvwmrc file"
-fi</span></code></pre></div><p>Some pitfalls to be wary of</p>
-<p>The test command needs to be in the form &quot;operand1<space>operator<space>operand2&quot; or operator<space>operand2 , in other words you really need these spaces, since the shell considers the first block containing no spaces to be either an operator (if it begins with a &#39;-&#39;) or an operand (if it doesn&#39;t). So for example; this</p>
-<pre>if [ 1=2 ]; then
-  echo &quot;hello&quot;
-fi</pre><p>gives exactly the &quot;wrong&quot; output (ie it echos &quot;hello&quot;, since it sees an operand but no operator.)
-Another potential trap comes from not protecting variables in quotes. We have already given an example as to why you must wrap anything you wish to use for a -n test with quotes. However, there are a lot of good reasons for using quotes all the time, or almost all of the time. Failing to do this when you have variables expanded inside tests can result in very wierd bugs. Here&#39;s an example: For example,</p>
+fi</span></code></pre></div><h3 id="值得注意的一些陷阱">值得注意的一些陷阱</h3><p>测试命令需要以“operand1 <space> operator <space> operand2”或“operator <space> operand2”的形式，换句话说，您真的需要这些空格，因为 shell 认为第一个不包含空格的块是运算符（如果以 <code>-</code> 开头）或操作数。例如：</p>
+<div class="highlight"><pre><code class="bash"><span class="keyword">if</span> [ <span class="number">1</span>=<span class="number">2</span> ]; <span class="keyword">then</span>
+  <span class="built_in">echo</span> <span class="string">"hello"</span>
+<span class="keyword">fi</span></code></pre></div><p>以上会给出准确的 “错误” 输出（即 <code>echo &quot;hello&quot;</code>，因为 shell 看到一个操作数，但没有操作符）。</p>
+<p>另一个潜在的陷阱来自于不保护引号中的变量。 我们已经给出了一个例子，说明为什么你必须用引号括起你想要使用在 <code>-n</code> 测试中的操作数。而且，在大部分时候都有很多足够好的理由来使用引号。当您在测试中展开变量时，无法执行此操作可能会导致非常严重的错误。 以下是一个例子：</p>
 <div class="highlight"><pre><code class="bash"><span class="shebang">#!/bin/bash</span>
 X=<span class="string">"-n"</span>
 Y=<span class="string">""</span>
 <span class="keyword">if</span> [ <span class="variable">$X</span> = <span class="variable">$Y</span> ] ; <span class="keyword">then</span>
   <span class="built_in">echo</span> <span class="string">"X=Y"</span>
-<span class="keyword">fi</span></code></pre></div><p>This will give misleading output since the shell expands our expression to
-[ -n = ]
-and the string &quot;=&quot; has non zero length.</p>
-<h3 id="a-brief-summary-of-test-operators">A brief summary of test operators</h3><p>Here&#39;s a quick list of test operators. It&#39;s by no means comprehensive, but its likely to be all you&#39;ll need to remember (if you need anything else, you can always check the bash manpage ... )</p>
+<span class="keyword">fi</span></code></pre></div><p>这将导致错误输出，因为 shell 将我们的表达式展开为<code>[ -n = “=” ]</code>，字符串 “=” 具有非零长度。</p>
+<h3 id="测试操作符的简要总结">测试操作符的简要总结</h3><p>以下是测试运算符的快速列表。 这不是全面的，但它可能是所有你需要记住的（如果你需要任何其他的，你可以随时检查 bash 手册页...）</p>
 <table>
 <thead>
 <tr>
@@ -244,17 +238,17 @@ and the string &quot;=&quot; has non zero length.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="loops">Loops</h2><p>Loops are constructions that enable one to reiterate a procedure or perform the same procedure on several different items. There are the following kinds of loops available in bash</p>
+<h2 id="循环">循环</h2><p>循环是使得人们可以重复一个过程或对几个不同的项目执行相同的过程的结构。 在bash中有以下种类的循环可用：</p>
 <ul>
-<li>for loops</li>
-<li>while loops</li>
+<li>for 循环</li>
+<li>while 循环</li>
 </ul>
-<h3 id="for-loops">For loops</h3><p>The syntax for the for loops is best demonstrated by example.</p>
+<h3 id="for-循环">for 循环</h3><p>for 循环的语法最适合通过示例描述：</p>
 <div class="highlight"><pre><code class="bash"><span class="shebang">#!/bin/bash</span>
 <span class="keyword">for</span> X <span class="keyword">in</span> red green blue
 <span class="keyword">do</span>
   <span class="built_in">echo</span> <span class="variable">$X</span>
-<span class="keyword">done</span></code></pre></div><p>THe for loop iterates the loop over the space seperated items. Note that if some of the items have embedded spaces, you need to protect them with quotes. Here&#39;s an example:</p>
+<span class="keyword">done</span></code></pre></div><p>for 循环遍历空白分隔的项。 请注意，如果某些项具有嵌入空白，则需要使用引号保护它们。 以下是一个例子：</p>
 <div class="highlight"><pre><code class="bash"><span class="shebang">#!/bin/bash</span>
 colour1=<span class="string">"red"</span>
 colour2=<span class="string">"light blue"</span>
@@ -262,48 +256,44 @@ colour3=<span class="string">"dark green"</span>
 <span class="keyword">for</span> X <span class="keyword">in</span> <span class="string">"<span class="variable">$colour1</span>"</span> <span class="variable">$colour2</span><span class="string">" <span class="variable">$colour3</span>"</span>
 <span class="keyword">do</span>
   <span class="built_in">echo</span> <span class="variable">$X</span>
-<span class="keyword">done</span></code></pre></div><p>Can you guess what would happen if we left out the quotes in the for statement ? This indicates that variable names should be protected with quotes unless you are pretty sure that they do not contain any spaces.
-Globbing in for loops</p>
-<p>The shell expands a string containing a <em> to all filenames that &quot;match&quot;. A filename matches if and only if it is identical to the match string after replacing the stars </em> with arbitrary strings. For example, the character &quot;*&quot; by itself expands to a space seperated list of all files in the working directory (excluding those that start with a dot &quot;.&quot; ) So</p>
-<p>echo <em>
-lists all the files and directories in the current directory.
-echo </em>.jpg
-lists all the jpeg files.
-echo ${HOME}/public_html/*.jpg
-lists all jpeg files in your public_html directory.
-As it happens, this turns out to be very useful for performing operations on the files in a directory, especially used in conjunction with a for loop. For example:</p>
+<span class="keyword">done</span></code></pre></div><p>你能猜测如果我们在 for 语句中省略引号，会发生什么？ 这表明变量名应该用引号保护，除非你确定它们不包含任何空格。</p>
+<h4 id="for-循环中的-glob">for 循环中的 glob</h4><p>shell 将包含 <code>*</code> 的字符串扩展为“匹配”的所有文件名。当且仅当与匹配字符串相同时，文件名匹配，用任意字符串替换星号 <code>*</code> 后。 例如，字符 <code>*</code> 本身扩展到工作目录中所有文件的空格分隔列表（不包括以点开头的 <code>.</code>）。所以：</p>
+<ul>
+<li><code>echo *</code> 列出当前目录中的所有文件和目录</li>
+<li><code>echo *.jpg</code> 列出所有 jpeg 文件</li>
+<li><code>echo ${HOME}/public_html/*.jpg</code> 列出您的 public_html 目录中的所有 jpeg 文件</li>
+</ul>
+<p>正因为如此，这对于对目录中的文件执行操作非常有用，特别是与for循环一起使用。 例如：</p>
 <div class="highlight"><pre><code class="bash"><span class="shebang">#!/bin/bash</span>
 <span class="keyword">for</span> X <span class="keyword">in</span> *.html
 <span class="keyword">do</span>
     grep -L <span class="string">'&lt;UL&gt;'</span> <span class="string">"<span class="variable">$X</span>"</span>
-<span class="keyword">done</span></code></pre></div><h3 id="while-loops">While Loops</h3><p>While loops iterate &quot;while&quot; a given condition is true. An example of this:</p>
+<span class="keyword">done</span></code></pre></div><h3 id="while-循环">while 循环</h3><p>当一个给定的条件为真 while 循环进行迭代。 一个例子：</p>
 <div class="highlight"><pre><code class="bash"><span class="shebang">#!/bin/bash</span>
 X=<span class="number">0</span>
 <span class="keyword">while</span> [ <span class="variable">$X</span> -le <span class="number">20</span> ]
 <span class="keyword">do</span>
   <span class="built_in">echo</span> <span class="variable">$X</span>
   X=$((X+<span class="number">1</span>))
-<span class="keyword">done</span></code></pre></div><p>This raises a natural question: why doesn&#39;t bash allow the C like for loops</p>
-<p>for (X=1,X&lt;10; X++)
-As it happens, this is discouraged for a reason: bash is an interpreted language, and a rather slow one for that matter. For this reason, heavy iteration is discouraged.
-Command Substitution</p>
-<p>Command Substitution is a very handy feature of the bash shell. It enables you to take the output of a command and treat it as though it was written on the command line. For example, if you want to set the variable X to the output of a command, the way you do this is via command substitution.</p>
-<p>There are two means of command substitution: brace expansion and backtick expansion.</p>
-<p>Brace expansion workls as follows: $(commands) expands to the output of commands This permits nesting, so commands can include brace expansions</p>
-<p>Backtick expansion expands <code>commands</code> to the output of commands</p>
-<p>An example is given;:</p>
+<span class="keyword">done</span></code></pre></div><p>这提出了一个自然的问题：为什么 bash 不允许 C 语言式的 for 循环 <code>for（X = 1，X &lt;10; X ++）</code> ？</p>
+<p>事实上，for 循环不被鼓励使用，因为：bash 是一种解释性语言，而且它的循环是一个相当缓慢的事情。 因此，不鼓励重复迭代。</p>
+<h2 id="命令替换">命令替换</h2><p>命令替换是 bash shell 非常方便的功能。 它使您可以获取命令的输出，并将其视为在命令行中写入。 例如，如果要将变量 <code>X</code> 设置为命令的输出，则通过命令替换来执行此操作。</p>
+<p>有两种形式的命令替换：括号展开和反向展开。</p>
+<p>括号扩展工作如下：<code>$(commands)</code> 展开到命令的输出，允许嵌套。因此命令可以包括括号扩展：</p>
+<p>反向扩展将 <code>commands</code> 展开到命令的输出：</p>
+<p>给出一个例子：</p>
 <div class="highlight"><pre><code class="bash"><span class="shebang">#!/bin/bash</span>
 files=<span class="string">"<span class="variable">$(ls)</span>"</span>
 web_files=`ls public_html`
 <span class="built_in">echo</span> <span class="string">"<span class="variable">$files</span>"</span>      <span class="comment"># we need the quotes to preserve embedded newlines in $files</span>
 <span class="built_in">echo</span> <span class="string">"<span class="variable">$web_files</span>"</span>  <span class="comment"># we need the quotes to preserve newlines</span>
 X=`expr <span class="number">3</span> \* <span class="number">2</span> + <span class="number">4</span>` <span class="comment"># expr evaluate arithmatic expressions. man expr for details.</span>
-<span class="built_in">echo</span> <span class="string">"<span class="variable">$X</span>"</span></code></pre></div><p>The advantage of the $() substitution method is almost self evident: it is very easy to nest. It is supported by most of the bourne shell varients (the POSIX shell or better is OK). However, the backtick substitution is slightly more readable, and is supported by even the most basic shells (any #!/bin/sh version is just fine)</p>
-<p>Note that if strings are not quote-protected in the above echo statement, new lines are replaced by spaces in the output.</p>
+<span class="built_in">echo</span> <span class="string">"<span class="variable">$X</span>"</span></code></pre></div><p><code>$()</code> 替代方法的优点是几乎不言而喻：嵌套很容易。 大部分的 bourne shell 可以支持（或 POSIX shell）。但是，反向替换稍微可读性更好，甚至最基本的 shell 也支持（任何 <code>#!/bin/sh</code> 都很好）。</p>
+<p>请注意，如果字符串在上述 <code>echo</code> 语句中没有引号保护，换行符将被输出中的空格替换。</p>
 </div>
 
   <div class="entry-meta">
-    <time class="updated" datetime="2017-02-06T00:00:00.000Z" itemprop="dateModified">Monday, Feb 6th, 2017</time>
+    <time class="updated" datetime="2017-05-04T00:00:00.000Z" itemprop="dateModified">Thursday, May 4th, 2017</time>
     in <span class="entry-tags">
       
       <a href="../tag/bash/">#bash</a>
@@ -311,15 +301,15 @@ X=`expr <span class="number">3</span> \* <span class="number">2</span> + <span c
       <a href="../tag/shell/">#shell</a>
       
     </span>
-  </div><div style="margin-top: 20px;" class="gh-comments" data-comment-id="" data-title="[译] 使用 bash shell 编写脚本的快速指南（翻译中...）"></div>
+  </div><div style="margin-top: 20px;" class="gh-comments" data-comment-id="2" data-title="[译] 使用 bash shell 编写脚本的快速指南"></div>
 <script type="text/javascript">
   (function (){
-    if (!'') return false;
+    if (!'2') return false;
     var gh_comments = document.getElementsByClassName('gh-comments')[0];
     var a = document.createElement('a');
     a.href = 'https://github.com/7anshuai/blog/issues';
     var gh_api = 'https://api.github.com/repos' + a.pathname;
-    var gh_issue_id = '';
+    var gh_issue_id = '2';
     var gh_issue_url = a.href +  '/' + gh_issue_id;
     var gh_comments_url = gh_api + '/' + gh_issue_id + '/comments';
     fetch(gh_comments_url, {
