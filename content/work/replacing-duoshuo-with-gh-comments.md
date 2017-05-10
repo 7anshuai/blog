@@ -2,7 +2,7 @@
 
 - pubdate: 2017-04-27
 - tags: node.js, nico, gh-comments
-- gh_issue_id: 1
+- issue: 1
 
 ------
 

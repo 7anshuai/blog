@@ -3,7 +3,7 @@
 
 - pubdate: 2017-05-04
 - tags: bash, shell
-- gh_issue_id: 2
+- issue: 2
 
 ------
 
