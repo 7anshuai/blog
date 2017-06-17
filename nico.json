@@ -15,7 +15,7 @@
         {"title": "feed", "link": "feed.xml"}
     ],
     "permalink": "{{directory}}/{{filename}}.html",
-    "perpage": 10,
+    "perpage": 100,
     "writers": [
         "nico.PostWriter",
         "nico.PageWriter",
