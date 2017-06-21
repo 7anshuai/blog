@@ -2,6 +2,7 @@
 
 - pubdate: 2016-09-19
 - tags: nginx, shell
+- issue: 3
 
 -------
 
@@ -174,4 +175,7 @@ server {
 现在，只需要在 `/Users/zaiste/dev` 创建一个新的目录及相应的 HTML 文件，剩下的事情就交给 Nginx 了。
 
 参考链接：
-- [Serving Apps Locally with Nginx and Pretty Domains](http://zaiste.net/2013/03/serving_apps_locally_with_nginx_and_pretty_domains/)
+- [Pow](https://github.com/basecamp/pow) - Zero-configuration Rack server for Mac OS X
+- [Serving Apps Locally with Nginx and Pretty Domains
+](https://zaiste.net/posts/serving_apps_locally_with_nginx_and_pretty_domains/)
+- [Using Dnsmasq for local development on OS X](https://passingcuriosity.com/2013/dnsmasq-dev-osx/)
