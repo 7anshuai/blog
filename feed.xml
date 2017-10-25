@@ -745,19 +745,6 @@ release-major: build test
 ]]>
         </content>
     </entry><entry>
-        <title type="html"><![CDATA[28 年华]]></title>
-        <link href="http://7anshuai.js.org/blog/life/28-years-old.html"/>
-        <published>2015-04-06T00:00:00.000Z</published>
-        <updated>2015-04-06T00:00:00.000Z</updated>
-        <id>http://7anshuai.js.org/blog/life/28-years-old.html</id>
-        <content type="html" xml:base="http://7anshuai.js.org/blog/" xml:lang="en">
-            <![CDATA[ <p>清明小假，昏昏沉沉的在房间宅了几天。真的挺浪费了外面的阳光。</p>
-<p>最近一阵子的心情和状态都很低落的样子。工作上也是马马虎虎，或许停下来休息下是个不错的选择。这样可以回家住上几天，吃爸妈做的家常饭菜，看几本书，简单自然的。</p>
-<p>今天28了，之前的这些年，感觉挺2B的。未来可以怎样，我无法知道。但不管18还是28，都应该好好珍惜才是。</p>
-<p>祝自己生日快乐！</p>
-]]>
-        </content>
-    </entry><entry>
         <title type="html"><![CDATA[在 Node.js 中使用 Asset Pipeline]]></title>
         <link href="http://7anshuai.js.org/blog/work/assets-pipeline-on-nodejs.html"/>
         <published>2015-03-16T14:03:07.000Z</published>
