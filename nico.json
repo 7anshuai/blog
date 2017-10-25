@@ -11,7 +11,7 @@
     "footer": "<small>theme <a href='https://github.com/7anshuai/nico-minimal'>nico-minimal</a></small>",
     "navigation": [
         {"title": "work", "link": "work/index.html"},
-        {"title": "life of shuai", "link": "life/index.html"},
+        {"title": "life", "link": "life/index.html"},
         {"title": "feed", "link": "feed.xml"}
     ],
     "permalink": "{{directory}}/{{filename}}.html",
