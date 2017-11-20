@@ -31,9 +31,6 @@
             <a href="./">work</a>
           </p>
           <p class="view">
-            <a href="../life/">life</a>
-          </p>
-          <p class="view">
             <a href="../feed.xml">feed</a>
           </p>
         </nav>
@@ -161,15 +158,15 @@
       <a href="../tag/gh-comments/">#gh-comments</a>
       
     </span>
-  </div><div style="margin-top: 20px;" class="gh-comments" data-comment-id="1" data-title="使用 GitHub Comments 替换多说评论"></div>
+  </div><div style="margin-top: 20px;" class="gh-comments" data-comment-id="" data-title="使用 GitHub Comments 替换多说评论"></div>
 <script type="text/javascript">
   (function (){
-    if (!'1') return false;
+    if (!'') return false;
     var gh_comments = document.getElementsByClassName('gh-comments')[0];
     var a = document.createElement('a');
     a.href = 'https://github.com/7anshuai/blog/issues';
     var gh_api = 'https://api.github.com/repos' + a.pathname;
-    var gh_issue_id = '1';
+    var gh_issue_id = '';
     var gh_issue_url = a.href +  '/' + gh_issue_id;
     var gh_comments_url = gh_api + '/' + gh_issue_id + '/comments';
     fetch(gh_comments_url, {

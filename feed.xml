@@ -102,7 +102,7 @@ then
 fi</pre><p>如果相应的条件为真，则 <code>if/elif</code> 和下一个 <code>elif</code> 或 <code>fi</code> 之间的块内的语句将被执行。 实际上，任何命令都可以替代条件，并且当且仅当命令返回退出状态为<code>0</code>（换句话说，如果命令退出“成功”），则该块将被执行。 但是，在本文档中，我们只会使用 <code>test</code> 或 <code>[ ]</code> 来测试条件。</p>
 <h3 id="测试命令和操作符">测试命令和操作符</h3><p>几乎所有的条件语句使用的命令都是测试命令。 测试返回 <code>true</code> 或 <code>false</code>（更准确地说，退出 <code>0</code> 或非零状态），这取决于测试是通过还是失败。 它大概如下工作：</p>
 <pre>test operand1 operator operand2</pre><p>对于某些测试，只需要一个操作数（operand2）测试命令通常以下列形式缩写：</p>
-<pre>[ operand1 operator operand2 ]</pre><p>让讨论回到现实，我们举几个例子：</p>
+<pre>[ operator operand2 ]</pre><p>让讨论回到现实，我们举几个例子：</p>
 <div class="highlight"><pre><code class="bash"><span class="shebang">#!/bin/bash</span>
 X=<span class="number">3</span>
 Y=<span class="number">4</span>
@@ -135,7 +135,7 @@ X=<span class="string">"-n"</span>
 Y=<span class="string">""</span>
 <span class="keyword">if</span> [ <span class="variable">$X</span> = <span class="variable">$Y</span> ] ; <span class="keyword">then</span>
   <span class="built_in">echo</span> <span class="string">"X=Y"</span>
-<span class="keyword">fi</span></code></pre></div><p>这将导致错误输出，因为 shell 将我们的表达式展开为<code>[ -n = “=” ]</code>，字符串 “=” 具有非零长度。</p>
+<span class="keyword">fi</span></code></pre></div><p>这将导致错误输出，因为 shell 将我们的表达式展开为<code>[ -n = ]</code>，字符串 “=” 具有非零长度。</p>
 <h3 id="测试操作符的简要总结">测试操作符的简要总结</h3><p>以下是测试运算符的快速列表。 这不是全面的，但它可能是所有你需要记住的（如果你需要任何其他的，你可以随时检查 bash 手册页...）</p>
 <table>
 <thead>
