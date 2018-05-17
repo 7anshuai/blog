@@ -246,7 +246,7 @@ test operand1 operator operand2
 [//]: <> (for some tests, there need be only one operand (operand2) The test command is typically abbreviated in this form:)
 
 ```
-[ operand1 operator operand2 ]
+[ operator operand2 ]
 ```
 
 让讨论回到现实，我们举几个例子：
@@ -305,7 +305,7 @@ if [ $X = $Y ] ; then
 fi
 ```
 
-这将导致错误输出，因为 shell 将我们的表达式展开为`[ -n = “=” ]`，字符串 “=” 具有非零长度。
+这将导致错误输出，因为 shell 将我们的表达式展开为`[ -n = ]`，字符串 “=” 具有非零长度。
 [//]: <> (This will give misleading output since the shell expands our expression to `[ -n = ]` and the string "=" has non zero length.)
 
 ### 测试操作符的简要总结
