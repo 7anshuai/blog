@@ -41,7 +41,9 @@ REACT_APP_API_URL=http://api
 - `npm run build`: `.env.production.local`, '.env.local', `.env.production`, `.env`
 - `npm test`: `.env.test.local`, `.env.test`, `.env` （注意没有 `.env.local`）
 
-通过不同的 `.env` 文件，可以为开发，测试，生产环境构建不同的 Bundle。如果您使用 Docker Image 来分发，部署 React 应用的话，需要针对不同的环境构建不同的镜像。V2EX 上有V友发帖讨论 [React 在 Docker 部署时，如何动态的读取特定环境下的环境变量](https://v2ex.com/t/824120)。在查阅了 Create React App 关于添加自定义环境变量的文档后，结合 nginx docker image（1.19版本及以上）提供的在nginx config中使用环境变量[方法][5]。可以通过 nginx 来动态注入环境变量到页面里，达到 React App
+通过不同的 `.env` 文件，可以为开发，测试，生产环境构建不同的 Bundle。如果您使用 Docker Image 来分发，部署 React 应用的话，需要针对不同的环境构建不同的镜像。
+
+V2EX 上有V友发帖讨论 [React 在 Docker 部署时，如何动态的读取特定环境下的环境变量](https://v2ex.com/t/824120)。在查阅了 Create React App 关于添加自定义环境变量的文档后，结合 nginx docker image（1.19版本及以上）提供的在 nginx config 中使用环境变量[方法][5]。可以通过 nginx 来动态注入环境变量到页面里，达到 React App
 动态读取特定环境下的环境变量效果。
 
 基本实现步骤如下：
@@ -54,13 +56,13 @@ REACT_APP_API_URL=http://api
   <head>
     <script>
       window.app = {
-        apiUrl: REACT_APP_API_URL
+        apiUrl: "%REACT_APP_API_URL%"
       };
     </script>
 
 ```
 
-- 在项目根目录添加 `.env`
+- 在项目根目录添加 `.env.development`
 
 ```bash
 REACT_APP_API_URL=http://api
@@ -88,15 +90,15 @@ FROM nginx:1.21.0-alpine as production
 ENV NODE_ENV production
 # Copy built assets from builder
 COPY --from=builder /app/build /usr/share/nginx/html
-# Add your nginx.conf template
-COPY default.template /etc/nginx/templates/default.template
+# Add your nginx config template
+COPY default.conf.template /etc/nginx/templates/default.conf.template
 # Expose port
 EXPOSE 80
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
 ```
 
-Nginx config 模板文件 `default.template` 示例：
+Nginx config 模板文件 `default.conf.template` 示例：
 
 ```nginx
 server {
@@ -105,8 +107,8 @@ server {
   location / {
     root /usr/share/nginx/html/;
     include /etc/nginx/mime.types;
-    sub_filter 'REACT_APP_API_URL' ${REACT_APP_API_URL};
     try_files $uri $uri/ /index.html;
+    sub_filter '%REACT_APP_API_URL%' '${REACT_APP_API_URL}';
   }
 }
 ```
@@ -114,10 +116,24 @@ server {
 - 部署时，将相应的环境变量传递给 React App 容器
 
 ```bash
-docker run -e REACT_APP_API_URL=https://api.examlpe.com --name your-react-app -d -p 80:80 your-react-app-image
+docker run -e REACT_APP_API_URL=https://api.example.com --name your-react-app -d -p 80:80 your-react-app-image
 ```
 
-**Done!**
+- 检查页面：`curl -i http://localhost:8080/`
+
+```bash
+$ curl -i http://localhost:8080/
+HTTP/1.1 200 OK
+Server: nginx/1.21.4
+Date: Sat, 25 Dec 2021 10:28:15 GMT
+Content-Type: text/html
+Transfer-Encoding: chunked
+Connection: keep-alive
+
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="icon" href="/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="Web site created using create-react-app"/><link rel="apple-touch-icon" href="/logo192.png"/><link rel="manifest" href="/manifest.json"/><title>React App</title><script>window.app={apiUrl:"https://api.example.com"}</script><script defer="defer" src="/static/js/main.b115a3e9.js"></script><link href="/static/css/main.073c9b0a.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>
+```
+
+**Done!** [GitHub Repo][6]
 
 
 [1]: https://create-react-app.dev/docs/advanced-configuration "内置环境变量"
@@ -125,3 +141,4 @@ docker run -e REACT_APP_API_URL=https://api.examlpe.com --name your-react-app -d
 [3]: https://medium.com/node-security/the-most-common-xss-vulnerability-in-react-js-applications-2bdffbcc1fa0 "JSON 序列化"
 [4]: https://create-react-app.dev/docs/adding-custom-environment-variables/#what-other-env-files-can-be-used "设置"
 [5]: https://hub.docker.com/_/nginx "在 nginx 配置中使用环境变量"
+[6]: https://github.com/7anshuai/react-app-env-vars-example "查看示例代码"
