@@ -110,7 +110,7 @@ REACT_APP_API_URL=http://api.localhost
 
 ```
 
-- 在 React 应用中使用 `window.app.apiUrl`
+- 在 React 应用中使用 `window.app.apiUrl` 获取 `REACT_APP_API_URL` 变量值
 - 开发完成后，使用 Docker 构建镜像, `Dockerfile` 示例如下:
 
 ```Dockerfile
@@ -158,7 +158,7 @@ server {
 - 部署时，将相应的环境变量传递给 React App 容器
 
 ```bash
-docker run -e REACT_APP_API_URL=https://api.example.com --name your-react-app -d -p 8080:80 your-react-app-image
+$ docker run -e REACT_APP_API_URL=https://api.example.com --name your-react-app -d -p 8080:80 your-react-app-image
 ```
 
 - 检查页面：`curl -i http://localhost:8080/`
